@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import Navbar from './components/Navbar.vue'
 </script>
 
 <template>
+  <Navbar/>
   <div class="neon neon_1"></div>
   <div class="neon neon_2"></div>
   <div class="neon neon_3"></div>
@@ -16,6 +18,7 @@
   position: absolute;
   padding-top: 35vh;
   overflow: visible;
+  z-index: -1;
 }
 
 .neon_1 {
