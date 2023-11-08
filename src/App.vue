@@ -61,7 +61,7 @@ body {
     align-items: center;
     justify-content: center;
     margin-bottom: 80px;
-    padding-top: 70px;
+    padding-top: 120px;
 }
 
 .main-title {

@@ -1,48 +1,79 @@
 <script setup lang="ts">
 import Logo from '../../assets/logo.png'
-import { onMounted, onUnmounted, ref } from 'vue';
+import {onMounted, onUnmounted, ref} from 'vue';
 
 const navbar = ref<HTMLDivElement | null>(null);
+const isSticky = ref(false)
+const isButtonWhite = ref(false)
 
 const handleScroll = () => {
-  if (navbar.value) {
-    if (window.scrollY > navbar.value.offsetTop) {
-      navbar.value.style.position = 'fixed';
-      navbar.value.style.top = '0';
-      navbar.value.style.width = '100%'; // Ensure the navbar spans the full width when fixed
-    } else {
-      navbar.value.style.position = 'relative';
-      navbar.value.style.top = '';
-      navbar.value.style.width = ''; // Reset the width
+    if(navbar.value) {
+        if(window.scrollY > navbar.value.offsetTop + 80) {
+            if(window.scrollY > navbar.value.offsetTop + 630) {
+                isButtonWhite.value = true
+            } else {
+                isButtonWhite.value = false
+            }
+            isSticky.value = true
+        }
+        else {
+            isSticky.value = false
+        }
     }
-  }
+
 };
 
 onMounted(() => {
-  window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll);
 });
 
 onUnmounted(() => {
-  window.removeEventListener('scroll', handleScroll);
+    window.removeEventListener('scroll', handleScroll);
 });
 </script>
 
 <template>
-    <nav ref="navbar" class="navbar">
+    <nav ref="navbar" class="navbar navbar-sticky">
         <div class="logo">
             <img :src="Logo">
-            <h1>Fitness</h1>
+            <h1 class="logo-text" :class="{'logo-animation': isSticky}">Fitness</h1>
         </div>
         <div class="navbar-titles">
             <a class="navbar-link" href="https://google.com/" target="_blank">Subscription</a>
             <a class="navbar-link" href="https://google.com/" target="_blank">FAQ</a>
             <a class="navbar-link" href="https://google.com/" target="_blank">Contact Us</a>
-            <a class="join-button" href="https://app.convy.chat/" target="_blank">Join the beta</a>
+            <a class="join-button" :class="{'button-white': isButtonWhite, 'button-grey': !isButtonWhite}"
+                href="https://app.convy.chat/" target="_blank">Join the beta</a>
         </div>
     </nav>
 </template>
 
 <style scoped lang="scss">
+.logo-animation {
+    transform: translate3d(0px, -56px, 0px);
+}
+
+.logo-text {
+    text-align: center;
+    font-size: 20px;
+    margin-left: 20px;
+    font-family: Zian, sans-serif;
+    color: white;
+    letter-spacing: 2px;
+    opacity: 95%;
+    transition: all .4s cubic-bezier(.645, .045, .355, 1);
+}
+
+.navbar-sticky {
+    top: 0;
+    position: fixed;
+}
+
+.placeHolder {
+    width: 100%;
+    height: 78.6px;
+}
+
 .navbar {
     display: flex;
     flex-direction: row;
@@ -60,16 +91,6 @@ onUnmounted(() => {
         img {
             height: 13%;
             width: 13%;
-        }
-
-        h1 {
-            text-align: center;
-            font-size: 20px;
-            margin-left: 20px;
-            font-family: Zian, sans-serif;
-            color: white;
-            letter-spacing: 2px;
-            opacity: 95%;
         }
     }
 
@@ -98,13 +119,21 @@ onUnmounted(() => {
             }
         }
 
+        .button-white {
+            background-color: rgb(221, 221, 221);
+            color: rgb(0, 0, 0);
+        }
+
+        .button-grey {
+            background-color: rgba(221, 221, 221, 0.1);
+            color: #DDDDDD;
+        }
+
         .join-button {
             border-radius: 12px;
             border-style: none;
-            background-color: rgba(221, 221, 221, 0.1);
             margin-left: 20px;
             padding: 10px 15.8px 11px 16px;
-            color: #DDDDDD;
             text-decoration: none;
             font-family: Euclid, sans-serif;
             font-size: 15px;
@@ -117,6 +146,6 @@ onUnmounted(() => {
                 transform: scale(1.1);
             }
         }
-    } 
+    }
 }
 </style>
