@@ -37,7 +37,7 @@ onUnmounted(() => {
             <a class="navbar-link" href="https://google.com/" target="_blank">Subscription</a>
             <a class="navbar-link" href="https://google.com/" target="_blank">FAQ</a>
             <a class="navbar-link" href="https://google.com/" target="_blank">Contact Us</a>
-            <a class="join-button" href="https://app.convy.chat/" target="_blank">Join the beta</a>
+            <a class="join-button" href="https://app.convy.chat/" target="_blank">Try it now</a>
         </div>
     </nav>
 </template>

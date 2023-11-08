@@ -3,6 +3,7 @@ import Navbar from './components/landing-page/Navbar.vue'
 import Stage from './components/landing-page/Stage.vue'
 import Features from './components/landing-page/Features.vue'
 import TextDivider from './components/landing-page/TextDivider.vue'
+import PricingPanel from './components/landing-page/PricingPanel.vue'
 </script>
 
 <template>
@@ -18,6 +19,7 @@ import TextDivider from './components/landing-page/TextDivider.vue'
             <Stage />
             <Features />
             <TextDivider />
+            <PricingPanel />
         </div>
     </div>
 </template>

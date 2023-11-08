@@ -2,9 +2,125 @@
 </script>
 
 <template>
-
+    <div class="flex-container--background-grey">
+        <div class="flex-container--pricing-header">
+            <h1>Here's how we see our future of pricing</h1>
+        </div>
+        <div class="flex-container--pricing-subtitle">
+            AI Fitness will have 3 plans, each including a 30-day trial
+        </div>
+        <div class="flex-container--divider">
+        </div>
+        <div class="flex-container--pricing-grid">
+            <div class="grid-container--pricing-card">
+                <h2>Guest</h2>
+                <br>
+                <h3>Free</h3>
+                <p>Use all features besides creating new groups and chats</p>
+            </div>
+            <div class="grid-container--pricing-card">
+                <h2>Member</h2>
+                <br>
+                <h3>6 € / month</h3>
+                <p>Create groups and chats in your personal space, invite unlimited guests</p>
+            </div>
+            <div class="grid-container--pricing-card">
+                <h2>Group</h2>
+                <br>
+                <h3>6 € / user / month</h3>
+                <p>Use all features besides creating new groups and chats</p>
+            </div>
+        </div>
+    </div>
 </template>
 
 <style scoped lang="scss">
+.flex-container--background-grey {
+    align-items: center;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    box-sizing: border-box;
+    background-color: rgba(221, 221, 221, .08);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-family: Euclid, sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 20px;
+    min-height: 200px;
+    position: relative;
+    width: 80vw;
+}
 
+.flex-container--pricing-header {
+    box-sizing: border-box;
+    color: rgb(221, 221, 221);
+    font-family: Euclid, sans-serif;
+    line-height: 20px;
+    margin-left: 50px;
+    margin-right: 50px;
+    margin-top: 75px;
+    width: 50%;
+
+    h1 {
+        font-size: 48px;
+        font-weight: 500;
+        line-height: 60px;
+        letter-spacing: -1px;
+        text-align: center;
+    }
+}
+
+.flex-container--pricing-subtitle {
+    margin-top: 20px;
+    margin-left: 30px;
+    margin-right: 30px;
+    color: #DDD;
+    text-align: center;
+    font-family: Euclied, sans-serif;
+    font-size: 18px;
+}
+
+.flex-container--divider {
+    width: 90%;
+    height: 1px;
+    background-color: rgba(221, 221, 221, .08);
+    color: rgba(221, 221, 221, .08);
+    margin-top: 100px;
+    margin-bottom: 100px;
+}
+
+.flex-container--pricing-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    column-gap: 50px;   
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-bottom: 50px;
+    justify-content: center;
+
+    .grid-container--pricing-card {
+        box-sizing: border-box;
+        color: #DDD;
+
+        h2 {
+            font-size: 40px;
+            line-height: 50px;
+        }
+        h3 {
+            font-size: 22px;
+            line-height: 30px;
+            font-weight: 300;
+        }
+        p {
+            font-size: 22px;
+            line-height: 28px;
+            color: rgba(221, 221, 221, 0.3);
+        }
+    }
+}
 </style>

@@ -68,7 +68,6 @@
         color: rgba(221, 221, 221, 0.40);
         font-size: 18px;
     }
-
 }
 
 .background-layer {
