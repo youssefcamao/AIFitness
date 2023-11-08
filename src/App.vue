@@ -18,9 +18,9 @@ import PricingPanel from './components/landing-page/PricingPanel.vue'
             </div>
             <Stage />
             <Features />
-            <TextDivider />
-            <PricingPanel />
         </div>
+        <TextDivider />
+        <PricingPanel />
     </div>
 </template>
 

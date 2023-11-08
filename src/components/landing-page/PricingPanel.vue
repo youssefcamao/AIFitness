@@ -3,6 +3,7 @@
 
 <template>
     <div class="flex-container--background-grey">
+        <div class="neon neon_pricing_blue"></div>
         <div class="flex-container--pricing-header">
             <h1>Here's how we see our future of pricing</h1>
         </div>
@@ -35,6 +36,15 @@
 </template>
 
 <style scoped lang="scss">
+.neon_pricing_blue {
+    background-color: #7af;
+    top: 0%;
+    bottom: auto;
+    left: auto;
+    right: 0%;
+    animation: MoveNeonBluePricing 15s infinite;
+}
+
 .flex-container--background-grey {
     align-items: center;
     border-bottom-left-radius: 20px;
@@ -97,7 +107,7 @@
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr;
-    column-gap: 50px;   
+    column-gap: 50px;
     padding-left: 50px;
     padding-right: 50px;
     padding-bottom: 50px;
@@ -111,15 +121,34 @@
             font-size: 40px;
             line-height: 50px;
         }
+
         h3 {
             font-size: 22px;
             line-height: 30px;
             font-weight: 300;
         }
+
         p {
             font-size: 22px;
             line-height: 28px;
             color: rgba(221, 221, 221, 0.3);
+        }
+    }
+
+
+    @keyframes MoveNeonBluePricing {
+
+        0%,
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+
+        33% {
+            transform: translate3d(-60vw, 10vh, 0);
+        }
+
+        66% {
+            transform: translate3d(0, 20vh, 0);
         }
     }
 }
