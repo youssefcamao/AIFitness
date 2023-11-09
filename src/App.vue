@@ -10,7 +10,7 @@ import PricingPanel from './components/landing-page/PricingPanel.vue'
     <div class="main">
         <Navbar />
         <div class="content">
-            <div class="backgroud-layer">
+            <div class="background-layer">
                 <div class="neon neon_green"></div>
                 <div class="neon neon_orange"></div>
                 <div class="neon neon_blue"></div>
@@ -19,8 +19,10 @@ import PricingPanel from './components/landing-page/PricingPanel.vue'
             <Stage />
             <Features />
         </div>
-        <TextDivider />
-        <PricingPanel />
+        <div class="content">
+            <TextDivider />
+            <PricingPanel />
+        </div>
     </div>
 </template>
 
@@ -35,6 +37,16 @@ body {
     font-family: Euclid, sans-serif;
     border: 0;
     background-color: #000000;
+}
+
+.background-layer {
+    z-index: -1;
+    position: absolute;
+    top: 0%;
+    bottom: 0%;
+    left: 0%;
+    right: 0%;
+    overflow: visible;
 }
 
 .section-devider {
@@ -52,7 +64,6 @@ body {
     max-width: 1440px;
     flex-direction: column;
     align-items: center;
-    padding: 76px;
     display: flex;
     position: relative;
 }
