@@ -29,7 +29,7 @@
                 <h2>Group</h2>
                 <br>
                 <h3>6 € / user / month</h3>
-                <p>Use all features besides creating new groups and chats</p>
+                <p>Chat with no limits in a team space, invite unlimited guests and clients</p>
             </div>
         </div>
     </div>
@@ -46,23 +46,17 @@
 }
 
 .flex-container--background-grey {
-    align-items: center;
-    border-bottom-left-radius: 20px;
-    border-bottom-right-radius: 20px;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
-    box-sizing: border-box;
-    background-color: rgba(221, 221, 221, .08);
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    font-family: Euclid, sans-serif;
-    font-size: 15px;
-    font-weight: 500;
-    line-height: 20px;
-    min-height: 200px;
+    align-items: center;
     position: relative;
-    width: 80vw;
+    border-radius: 20px;
+    width: 60vw;
+    max-width: 1200px;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    background-color: rgba(221, 221, 221, .08);
+    font-family: Euclid, sans-serif;
 }
 
 .flex-container--pricing-header {
@@ -72,7 +66,6 @@
     line-height: 20px;
     margin-left: 50px;
     margin-right: 50px;
-    margin-top: 75px;
     width: 50%;
 
     h1 {
@@ -99,8 +92,7 @@
     height: 1px;
     background-color: rgba(221, 221, 221, .08);
     color: rgba(221, 221, 221, .08);
-    margin-top: 100px;
-    margin-bottom: 100px;
+    margin: 75px 0;
 }
 
 .flex-container--pricing-grid {
@@ -110,7 +102,6 @@
     column-gap: 50px;
     padding-left: 50px;
     padding-right: 50px;
-    padding-bottom: 50px;
     justify-content: center;
 
     .grid-container--pricing-card {
