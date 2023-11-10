@@ -39,9 +39,9 @@ onUnmounted(() => {
             <h1 class="logo-text" :class="{'logo-animation': isSticky}">Fitness</h1>
         </div>
         <div class="navbar-titles">
-            <a class="navbar-link" href="https://google.com/" target="_blank">Subscription</a>
+            <a class="navbar-link" href="https://google.com/" target="_blank">Pricing</a>
             <a class="navbar-link" href="https://google.com/" target="_blank">FAQ</a>
-            <a class="navbar-link" href="https://google.com/" target="_blank">Contact Us</a>
+            <a class="navbar-link" href="https://google.com/" target="_blank">Newsletter</a>
             <a class="join-button" :class="{'button-white': isButtonWhite, 'button-grey': !isButtonWhite}"
                 href="https://app.convy.chat/" target="_blank">Try it now</a>
         </div>

@@ -83,6 +83,7 @@
         font-family: Euclid Circular A;
         font-size: 20px;
         margin-left: auto;
+        cursor: pointer;
     }
 }
 

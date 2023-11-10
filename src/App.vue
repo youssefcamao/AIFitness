@@ -5,6 +5,7 @@ import Features from './components/landing-page/Features.vue'
 import TextDivider from './components/landing-page/TextDivider.vue'
 import PricingPanel from './components/landing-page/PricingPanel.vue'
 import Newsletter from './components/landing-page/Newsletter.vue'
+import Footer from './components/landing-page/Footer.vue'
 </script>
 
 <template>
@@ -27,6 +28,7 @@ import Newsletter from './components/landing-page/Newsletter.vue'
         <div class="content">
             <Newsletter />
         </div>
+        <Footer />
     </div>
 </template>
 
@@ -38,7 +40,7 @@ import Newsletter from './components/landing-page/Newsletter.vue'
 
 body {
     overflow-x: hidden;
-    font-family: Euclid, sans-serif;
+    font-family: Euclid Circular A, sans-serif;
     border: 0;
     background-color: #000000;
 }
