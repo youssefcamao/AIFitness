@@ -4,6 +4,7 @@ import Stage from './components/landing-page/Stage.vue'
 import Features from './components/landing-page/Features.vue'
 import TextDivider from './components/landing-page/TextDivider.vue'
 import PricingPanel from './components/landing-page/PricingPanel.vue'
+import Newsletter from './components/landing-page/Newsletter.vue'
 </script>
 
 <template>
@@ -22,6 +23,9 @@ import PricingPanel from './components/landing-page/PricingPanel.vue'
         <div class="content">
             <TextDivider />
             <PricingPanel />
+        </div>
+        <div class="content">
+            <Newsletter />
         </div>
     </div>
 </template>
