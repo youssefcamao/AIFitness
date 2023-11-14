@@ -22,7 +22,7 @@
     width: 97vw;
     padding: 20px 30px;
     color: #777;
-    font-family: Euclid Circular A, sans-serif;
+    font-family: 'Euclid Regular', sans-serif;
     font-size: 13px;
 
     .footer--links {

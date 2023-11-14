@@ -33,18 +33,18 @@
 .newsletter--description {
     text-align: center;
     color: #ddd;
-    font-family: Euclid Circular A;
     margin-bottom: 20px;
 
     h1 {
         letter-spacing: 4.8px;
-        font-weight: 500;
+        font-family: 'Euclid SemiBold', sans-serif;
         font-size: 50px;
     }
 
     h3 {
-        font-weight: 400;
+        font-family: 'Euclid Regular', sans-serif;
         font-size: 22px;
+        font-weight: 400;
     }
 }
 
@@ -67,7 +67,7 @@
         height: 100%;
         width: 100%;
         background-color: transparent;
-        font-family: Euclid Circular A;
+        font-family: 'Euclid Regular', sans-serif;
         color: #ddd;
         font-size: 18px;
         padding: 12px 20px;
@@ -79,10 +79,10 @@
         color: black;
         border: none;
         border-radius: 8px;
-        padding: 10px 15px;
-        font-family: Euclid Circular A;
-        font-size: 20px;
         margin-left: auto;
+        padding: 10px 15px;
+        font-family: 'Euclid SemiBold', sans-serif;
+        font-size: 20px;
         cursor: pointer;
     }
 }

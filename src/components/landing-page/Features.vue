@@ -41,7 +41,7 @@
 <style lang="scss">
 .features-section {
     display: grid;
-    font-family: Euclid, sans-serif;
+    font-family: 'Euclid Regular', sans-serif;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr;
     gap: 80px;

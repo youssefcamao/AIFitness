@@ -40,9 +40,9 @@ import Footer from './components/landing-page/Footer.vue'
 
 body {
     overflow-x: hidden;
-    font-family: Euclid Circular A, sans-serif;
     border: 0;
     background-color: #000000;
+    font-family: 'Euclid Regular', sans-serif;
 }
 
 .background-layer {
@@ -91,9 +91,8 @@ body {
     background-color: transparent;
     background-clip: border-box;
     align-self: auto;
-    font-family: Euclid, sans-serif;
+    font-family: 'Euclid Bold', sans-serif;
     font-size: 80px;
-    font-weight: bold;
     line-height: 100%;
     overflow: visible;
 }
