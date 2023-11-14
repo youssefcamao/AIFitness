@@ -12,9 +12,7 @@
         <div class="lead-block">
             <div class="under-text">Personalized, dynamic, and targeted fitness plans</div>
         </div>
-        <a href="https://app.convy.chat/" target="_blank" class="button-main button">
-          Join the beta
-        </a>
+        <a href="https://google.com/" target="_blank" class="button-main button">Join the beta</a>
         <div class="lead-block">
             <div class="under-text">1834 people joined already</div>
         </div>
@@ -24,7 +22,7 @@
 <style scoped lang="scss">
 
 .button {
-    font-family: Euclid, sans-serif;
+    font-family: 'Euclid SemiBold' , sans-serif;
     text-align: center;
     text-transform: none;
     -webkit-text-fill-color: inherit;
@@ -56,7 +54,7 @@
 .under-text {
     color: rgba(221, 221, 221, .4);
     font-size: 20px;
-    font-family: Euclid, sans-serif;
+    font-family: 'Euclid Regular', sans-serif;
     text-align: center;
 }
 

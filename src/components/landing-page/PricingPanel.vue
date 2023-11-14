@@ -74,13 +74,11 @@
     padding-top: 50px;
     padding-bottom: 50px;
     background-color: rgba(221, 221, 221, .08);
-    font-family: Euclid, sans-serif;
 }
 
 .flex-container--pricing-header {
     box-sizing: border-box;
     color: rgb(221, 221, 221);
-    font-family: Euclid, sans-serif;
     line-height: 20px;
     margin-left: 50px;
     margin-right: 50px;
@@ -88,10 +86,10 @@
 
     h1 {
         font-size: 48px;
-        font-weight: 500;
         line-height: 60px;
         letter-spacing: -1px;
         text-align: center;
+        font-family: 'Euclid SemiBold', sans-serif;
     }
 }
 
@@ -101,7 +99,7 @@
     margin-right: 30px;
     color: #DDD;
     text-align: center;
-    font-family: Euclied, sans-serif;
+    font-family: 'Euclid Regular', sans-serif;
     font-size: 18px;
 }
 
@@ -129,18 +127,21 @@
         h2 {
             font-size: 40px;
             line-height: 50px;
+            font-family: 'Euclid SemiBold', sans-serif;
         }
 
         h3 {
             font-size: 22px;
             line-height: 30px;
             font-weight: 300;
+            font-family: 'Euclid Regular', sans-serif;
         }
 
         p {
             font-size: 22px;
             line-height: 28px;
             color: rgba(221, 221, 221, 0.3);
+            font-family: 'Euclid Regular', sans-serif;
         }
     }
 

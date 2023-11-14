@@ -39,9 +39,9 @@ onUnmounted(() => {
             <h1 class="logo-text" :class="{'logo-animation': isSticky}">Fitness</h1>
         </div>
         <div class="navbar-titles">
-            <a class="navbar-link" href="https://google.com/" target="_blank">Subscription</a>
-            <a class="navbar-link" href="https://google.com/" target="_blank">FAQ</a>
-            <a class="navbar-link" href="https://google.com/" target="_blank">Contact Us</a>
+            <a class="navbar-link" href="https://google.com/" target="_blank">Pricing</a>
+            <a class="navbar-link" href="https://google.com/" target="_blank">Features</a>
+            <a class="navbar-link" href="https://google.com/" target="_blank">Newsletter</a>
             <a class="join-button" :class="{'button-white': isButtonWhite, 'button-grey': !isButtonWhite}"
                 href="https://app.convy.chat/" target="_blank">Try it now</a>
         </div>
@@ -58,7 +58,7 @@ onUnmounted(() => {
     font-size: 20px;
     margin-left: 20px;
     font-family: Zian, sans-serif;
-    color: white;
+    color: #DDD;
     letter-spacing: 2px;
     opacity: 95%;
     transition: all .4s cubic-bezier(.645, .045, .355, 1);
@@ -101,7 +101,7 @@ onUnmounted(() => {
         .navbar-link {
             color: rgba(221, 221, 221, .5);
             font-weight: bold;
-            font-family: Euclid, sans-serif;
+            font-family: 'Euclid Regular', sans-serif;
             text-align: center;
             font-size: 15px;
             padding: 8px 16px;
@@ -135,9 +135,8 @@ onUnmounted(() => {
             margin-left: 20px;
             padding: 10px 15.8px 11px 16px;
             text-decoration: none;
-            font-family: Euclid, sans-serif;
+            font-family: 'Euclid Bold', sans-serif;
             font-size: 15px;
-            font-weight: bold;
             cursor: pointer;
             z-index: 99;
             transition: all .2s cubic-bezier(.645, .045, .355, 1);

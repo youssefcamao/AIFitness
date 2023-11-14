@@ -4,6 +4,7 @@ import Stage from './components/landing-page/Stage.vue'
 import Features from './components/landing-page/Features.vue'
 import PricingPanel from './components/landing-page/PricingPanel.vue'
 import Newsletter from './components/landing-page/Newsletter.vue'
+import Footer from './components/landing-page/Footer.vue'
 import {ref, onMounted} from 'vue'
 
 const isBrowserFirefox = ref(false)
@@ -39,6 +40,7 @@ onMounted(() => {
         <div class="content">
             <Newsletter />
         </div>
+        <Footer />
     </div>
 </template>
 
@@ -50,9 +52,9 @@ onMounted(() => {
 
 body {
     overflow-x: hidden;
-    font-family: Euclid, sans-serif;
     border: 0;
     background-color: #000000;
+    font-family: 'Euclid Regular', sans-serif;
 }
 
 .background-layer {
@@ -101,9 +103,8 @@ body {
     background-color: transparent;
     background-clip: border-box;
     align-self: auto;
-    font-family: Euclid, sans-serif;
+    font-family: 'Euclid Bold', sans-serif;
     font-size: 80px;
-    font-weight: bold;
     line-height: 100%;
     overflow: visible;
 }
