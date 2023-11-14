@@ -13,6 +13,14 @@ const navbar = ref<HTMLDivElement | null>(null);
 const isSticky = ref(false)
 const isButtonWhite = ref(false)
 
+
+const scrollToSection = (sectionId: string) => {
+    console.log(sectionId)
+    const element = document.getElementById(sectionId);
+    if(element) {
+        element.scrollIntoView({behavior: 'smooth'});
+    }
+};
 const handleScroll = () => {
     if(navbar.value) {
         if(window.scrollY > navbar.value.offsetTop + 80) {
@@ -27,8 +35,8 @@ const handleScroll = () => {
             isSticky.value = false
         }
     }
+}
 
-};
 
 onMounted(() => {
     window.addEventListener('scroll', handleScroll);
@@ -46,9 +54,9 @@ onUnmounted(() => {
             <h1 class="logo-text" :class="{'logo-animation': isSticky}">Fitness</h1>
         </div>
         <div class="navbar-titles">
-            <a class="navbar-link" href="#pricing-panel">Pricing</a>
-            <a class="navbar-link" href="#features">Features</a>
-            <a class="navbar-link" href="#newsletter">Newsletter</a>
+            <a class="navbar-link" @click="scrollToSection('pricing-panel')">Pricing</a>
+            <a class="navbar-link" @click="scrollToSection('features')">Features</a>
+            <a class="navbar-link" @click="scrollToSection('newsletter')">Newsletter</a>
             <a class="join-button" :class="{'button-white': isButtonWhite, 'button-grey': !isButtonWhite}"
                 @click="HandleChat">Try it now</a>
         </div>
@@ -119,6 +127,7 @@ onUnmounted(() => {
             z-index: 1;
             position: relative;
             overflow: hidden;
+            cursor: pointer;
 
             &:hover {
                 color: #FFFFFF;

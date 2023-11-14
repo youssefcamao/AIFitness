@@ -169,6 +169,7 @@ body {
     align-items: center;
     flex-direction: column;
     overflow: visible;
+    scroll-behavior: smooth;
 }
 
 .label {

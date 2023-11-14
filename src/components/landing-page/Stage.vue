@@ -55,6 +55,7 @@ const HandleChat = () => {
     padding: 16px 32px;
     text-decoration: none;
     margin-top: 40px;
+    cursor: pointer;
 }
 
 .under-text {
