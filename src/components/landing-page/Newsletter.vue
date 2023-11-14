@@ -2,7 +2,7 @@
 </script>
 
 <template>
-    <div class="flex-container--newsletter">
+    <div id="newsletter" class="flex-container--newsletter">
         <div class="neon neon_newsletter_green"></div>
         <div class="neon neon_newsletter_yellow"></div>
         <img src="../../assets/mail.png" class="mail-icon">
