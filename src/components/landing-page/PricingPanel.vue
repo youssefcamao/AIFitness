@@ -67,7 +67,6 @@
     flex-direction: column;
     align-items: center;
     position: relative;
-    margin-bottom: 80px;
     border-radius: 20px;
     width: 65vw;
     max-width: 1200px;
