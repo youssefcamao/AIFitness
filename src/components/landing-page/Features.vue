@@ -2,7 +2,7 @@
 </script>
 
 <template>
-    <div class="features-section">
+    <div id="features" class="features-section">
         <div class="card">
             <img src="../../assets/report_white.png" alt="Icon">
             <h3>Personalized Fitness Plans</h3>

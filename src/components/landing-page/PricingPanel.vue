@@ -2,7 +2,7 @@
 </script>
 
 <template>
-    <div class="block-main-text">
+    <div id="pricing-panel" class="block-main-text">
         <div class="main-title">We're in beta,
             <br>so it is free for now
         </div>
