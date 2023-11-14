@@ -74,6 +74,7 @@
     padding-top: 50px;
     padding-bottom: 50px;
     background-color: rgba(221, 221, 221, .08);
+    border: 1px solid rgba(221, 221, 221, .08);
 }
 
 .flex-container--pricing-header {
