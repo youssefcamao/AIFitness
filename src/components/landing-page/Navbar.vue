@@ -1,6 +1,13 @@
 <script setup lang="ts">
 import Logo from '../../assets/logo.png'
 import {onMounted, onUnmounted, ref} from 'vue';
+import {useRouter} from 'vue-router'
+
+const router = useRouter()
+
+const HandleChat = () => {
+    router.push('/chat')
+}
 
 const navbar = ref<HTMLDivElement | null>(null);
 const isSticky = ref(false)
@@ -43,7 +50,7 @@ onUnmounted(() => {
             <a class="navbar-link" href="https://google.com/" target="_blank">Features</a>
             <a class="navbar-link" href="https://google.com/" target="_blank">Newsletter</a>
             <a class="join-button" :class="{'button-white': isButtonWhite, 'button-grey': !isButtonWhite}"
-                href="https://app.convy.chat/" target="_blank">Try it now</a>
+                @click="HandleChat">Try it now</a>
         </div>
     </nav>
 </template>

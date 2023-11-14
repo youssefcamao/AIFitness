@@ -1,4 +1,11 @@
 <script setup lang="ts">
+import {useRouter} from 'vue-router'
+
+const router = useRouter()
+
+const HandleChat = () => {
+    router.push('/chat')
+}
 </script>
 
 <template>
@@ -12,7 +19,7 @@
         <div class="lead-block">
             <div class="under-text">Personalized, dynamic, and targeted fitness plans</div>
         </div>
-        <a href="https://google.com/" target="_blank" class="button-main button">Join the beta</a>
+        <a class="button-main button" @click="HandleChat">Join the beta</a>
         <div class="lead-block">
             <div class="under-text">1834 people joined already</div>
         </div>
@@ -20,9 +27,8 @@
 </template>
 
 <style scoped lang="scss">
-
 .button {
-    font-family: 'Euclid SemiBold' , sans-serif;
+    font-family: 'Euclid SemiBold', sans-serif;
     text-align: center;
     text-transform: none;
     -webkit-text-fill-color: inherit;
