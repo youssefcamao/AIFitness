@@ -2,8 +2,18 @@
 </script>
 
 <template>
+    <div class="block-main-text">
+        <div class="main-title">We're in beta,
+            <br>so it is free for now
+        </div>
+        <div class="lead-block">
+            <div class="sub-text">We are a self-funded team with the intention to reinvent remote
+                <br>communication. While we develop core stuff, Convy is free to use.
+            </div>
+        </div>
+    </div>
+    <div class="neon neon_pricing_blue"></div>
     <div class="flex-container--background-grey">
-        <div class="neon neon_pricing_blue"></div>
         <div class="flex-container--pricing-header">
             <h1>Here's how we see our future of pricing</h1>
         </div>
@@ -36,6 +46,13 @@
 </template>
 
 <style scoped lang="scss">
+.sub-text {
+    color: #ddd;
+    font-size: 20px;
+    font-family: Euclid, sans-serif;
+    text-align: center;
+}
+
 .neon_pricing_blue {
     background-color: #7af;
     top: 0%;

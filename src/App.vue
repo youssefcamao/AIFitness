@@ -2,9 +2,22 @@
 import Navbar from './components/landing-page/Navbar.vue'
 import Stage from './components/landing-page/Stage.vue'
 import Features from './components/landing-page/Features.vue'
-import TextDivider from './components/landing-page/TextDivider.vue'
 import PricingPanel from './components/landing-page/PricingPanel.vue'
 import Newsletter from './components/landing-page/Newsletter.vue'
+import {ref, onMounted} from 'vue'
+
+const isBrowserFirefox = ref(false)
+
+const detectBrowser = () => {
+    const userAgent = navigator.userAgent;
+    isBrowserFirefox.value = userAgent.includes("Firefox")
+    console.log(isBrowserFirefox)
+}
+
+onMounted(() => {
+    detectBrowser()
+})
+
 </script>
 
 <template>
@@ -12,16 +25,15 @@ import Newsletter from './components/landing-page/Newsletter.vue'
         <Navbar />
         <div class="content">
             <div class="background-layer">
-                <div class="neon neon_green"></div>
-                <div class="neon neon_orange"></div>
-                <div class="neon neon_blue"></div>
-                <div class="neon neon_pink"></div>
+                <div class="neon neon_green" :class="{'neon-moz': isBrowserFirefox}"></div>
+                <div class="neon neon_orange" :class="{'neon-moz': isBrowserFirefox}"></div>
+                <div class="neon neon_blue" :class="{'neon-moz': isBrowserFirefox}"></div>
+                <div class="neon neon_pink" :class="{'neon-moz': isBrowserFirefox}"></div>
             </div>
             <Stage />
             <Features />
         </div>
         <div class="content">
-            <TextDivider />
             <PricingPanel />
         </div>
         <div class="content">
@@ -100,6 +112,10 @@ body {
     margin-top: 24px;
     font-size: 20px;
     color: rgba(221, 221, 221, .4);
+}
+
+.neon-moz {
+    opacity: 0.6;
 }
 
 .neon {
