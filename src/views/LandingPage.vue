@@ -12,7 +12,6 @@ const isBrowserFirefox = ref(false)
 const detectBrowser = () => {
     const userAgent = navigator.userAgent;
     isBrowserFirefox.value = userAgent.includes("Firefox")
-    console.log(isBrowserFirefox)
 }
 
 onMounted(() => {

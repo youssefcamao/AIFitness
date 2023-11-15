@@ -15,12 +15,13 @@ const isButtonWhite = ref(false)
 
 
 const scrollToSection = (sectionId: string) => {
-    console.log(sectionId)
     const element = document.getElementById(sectionId);
     if(element) {
         element.scrollIntoView({behavior: 'smooth'});
     }
 };
+
+
 const handleScroll = () => {
     if(navbar.value) {
         if(window.scrollY > navbar.value.offsetTop + 80) {
