@@ -1,4 +1,20 @@
 <script setup lang="ts">
+import {onMounted, ref} from 'vue';
+
+const text = ref('')
+const textareaRef = ref<null | HTMLTextAreaElement>(null)
+
+const resizeTextarea = () => {
+    const textarea = textareaRef.value;
+    if (textarea) {
+        textarea.style.height = 'auto'
+        textarea.style.height = '${textarea.scrollHeight}px'
+    }
+}
+
+onMounted(() => {
+    resizeTextarea
+})
 </script>
 <template>
     <div class="main-chat">
@@ -55,10 +71,10 @@
                         </li>
                     </ul>
                     <!-- Chat input -->
-                    <div class="chat-input">
-                        <div class="input-group">
+                    <div class="input-wrapper">
+                        <div class="chat-input">
                             <div class="grow-wrap">
-                                <textarea class="input-field" placeholder="Send a message" type="text" rows="1" />
+                                <textarea ref="textareaRef" v-model="text" @input="resizeTextarea" class="input-field" placeholder="Send a message" type="text" rows="1"/>
                             </div>
                         </div>
                         <button class="send-button">
@@ -166,16 +182,18 @@
     }
 }
 
-.chat-input {
+.input-wrapper {
     display: flex;
     align-items: center;
     border-radius: 8px;
+    margin: 0 auto;
     padding: 0.5rem 1rem;
     background-color: rgba(#0E1016, 0.7);
     border: 1px solid rgba($color: #FFFFFF, $alpha: 0.3);
+    width: 700px;
 }
 
-.input-group {
+.chat-input {
     display: flex;
     align-items: center;
     background: transparent;
@@ -187,6 +205,10 @@
         margin-right: 0.75rem;
     }
 
+    .grow-wrap {
+        width: 100%;
+        padding-right: 10px;
+    }
     .input-field {
         background-color: transparent;
         flex: 1;
@@ -197,9 +219,9 @@
         border: none;
         font-size: 16px;
         font: inherit;
-        max-height: 200px;
-        height: 52px;
-        overflow-y: hidden;
+        width: 100%;
+        overflow-wrap: break-word;
+        overflow-y: auto;
 
         &::placeholder {
             color: rgba(white, 0.5);
@@ -217,16 +239,6 @@
         height: 25px;
     }
 }
-
-
-
-
-
-
-
-
-
-
 
 .chat-history {
     width: 100%;
