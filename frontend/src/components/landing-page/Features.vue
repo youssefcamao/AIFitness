@@ -46,6 +46,7 @@
     grid-template-rows: 1fr 1fr;
     gap: 80px;
     padding: 80px;
+    width: 75vw;
     justify-content: center;
     border-radius: 15px;
     background-color: rgba(221, 221, 221, .08);
