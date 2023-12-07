@@ -5,10 +5,11 @@ from langchain.prompts import ChatPromptTemplate
 from ..models.chat_session import ChatSession
 from ..config import settings
 from ..llm import prompts
-from bson import ObjectId
+from ..llm.title_creator import TitleLlm
 from ..models.chat_session import ChatSession
 from beanie import PydanticObjectId
 from typing import List, Dict
+import asyncio
 
 
 class ChatService:
@@ -16,6 +17,7 @@ class ChatService:
         self.chat_model = ChatOpenAI(
             api_key=settings.OPENAI_API_KEY, model_name=settings.MODEL_NAME)
         set_llm_cache(InMemoryCache())
+        self.title_creator = TitleLlm()
         self.sessions = {}
 
     async def get_session_fromId(self, session_id: PydanticObjectId) -> ChatSession | None:
@@ -29,10 +31,9 @@ class ChatService:
         await session.save()
         return session.get_latest_response()
 
-    async def create_new_session(self, session_title, initial_message) -> ChatSession:
+    async def create_new_session(self, initial_message) -> ChatSession:
         session = ChatSession()
-        session.session_title = session_title
-        await self.run_chat(session, initial_message)
+        await asyncio.gather(self.run_chat(session, initial_message), self.__setup_title(session, initial_message))
         saved_session = await ChatSession.insert_one(session)
         return saved_session
 
@@ -50,6 +51,10 @@ class ChatService:
 
         chat_prompt = ChatPromptTemplate.from_messages(messages)
         formatted_messages = chat_prompt.format()
-        response = self.chat_model.invoke(
+        response = await self.chat_model.ainvoke(
             formatted_messages)
         chat_session.add_ai_message(response.content)
+
+    async def __setup_title(self, session: ChatSession, initial_message: str):
+        title = await self.title_creator.generate_summary(initial_message)
+        session.session_title = title

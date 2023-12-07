@@ -8,7 +8,6 @@ from ..models.endpoint_models import CreateNewChat, HandleChat
 
 router = APIRouter()
 chat_service = ChatService()
-title_creator = TitleLlm()
 
 
 @router.post("/chat/{session_id}")
@@ -32,8 +31,7 @@ async def chat(session_id: PydanticObjectId, message: str) -> HandleChat:
 async def start_new_session(message: str) -> CreateNewChat:
     if not message:
         raise HTTPException(status_code=400, detail="Message is required")
-    session_title = title_creator.generate_summary(message)
-    session = await chat_service.create_new_session(session_title, message)
+    session = await chat_service.create_new_session(message)
     return CreateNewChat(
         session_id=str(session.id),
         session_title=session.session_title,

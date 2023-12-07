@@ -25,7 +25,7 @@ class TitleLlm:
                 return True
         return False
 
-    def generate_summary(self, initial_user_message: str) -> str:
+    async def generate_summary(self, initial_user_message: str) -> str:
         instruction = "You are a summarization AI. You'll never answer a user's question directly, but instead summarize the user's request into a single short sentence of four words or less. Always start your answer with an emoji relevant to the summary."
 
         example_template = """
@@ -44,7 +44,7 @@ class TitleLlm:
             input_variables=["input"],
             example_separator="\n\n",
         )
-        response = self.chat_model.invoke(
+        response = await self.chat_model.ainvoke(
             few_shot_prompt.format(input=initial_user_message))
         summary = response.content.strip()
 
