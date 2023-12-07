@@ -44,7 +44,7 @@ class ChatSession(Document):
         json_schema_extra = {
             "example": {
                 "_id": "066de609-b04a-4b30-b46c-32537c7f1f6e",
-                "title": "new Chat",
+                "session_title": "new Chat",
                 "messages": [{"role": "ai", "message": "Hello how can i help you"},
                              {"role": "user", "message": "can you give me a fitness plan"}]
             }

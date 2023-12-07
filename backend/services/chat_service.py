@@ -8,6 +8,7 @@ from ..llm import prompts
 from bson import ObjectId
 from ..models.chat_session import ChatSession
 from beanie import PydanticObjectId
+from typing import List, Dict
 
 
 class ChatService:
@@ -35,10 +36,10 @@ class ChatService:
         saved_session = await ChatSession.insert_one(session)
         return saved_session
 
-    async def get_all_sessions(self):
+    async def get_all_sessions(self) -> List[ChatSession]:
         return await ChatSession.find_all().to_list()
 
-    async def delete_session(self, session_to_delete: ChatSession):
+    async def delete_session(self, session_to_delete: ChatSession) -> Dict[str, str]:
         await session_to_delete.delete()
         return {"message": "Session deleted"}
 
