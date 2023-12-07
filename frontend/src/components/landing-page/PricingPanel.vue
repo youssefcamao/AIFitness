@@ -8,7 +8,7 @@
         </div>
         <div class="lead-block">
             <div class="sub-text">We are a self-funded team with the intention to reinvent remote
-                <br>communication. While we develop core stuff, Convy is free to use.
+                <br>communication. While we develop core stuff, our product is free to use.
             </div>
         </div>
     </div>

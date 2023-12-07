@@ -1,20 +1,35 @@
 <script setup lang="ts">
-import {onMounted, ref} from 'vue';
+import {ref} from 'vue';
 
-const text = ref('')
-const textareaRef = ref<null | HTMLTextAreaElement>(null)
+const textareaRef = ref<HTMLTextAreaElement | null>(null)
+const messageText = ref('')
 
-const resizeTextarea = () => {
-    const textarea = textareaRef.value;
-    if (textarea) {
-        textarea.style.height = 'auto'
-        textarea.style.height = '${textarea.scrollHeight}px'
+const handleInput = (event: Event) => {
+    const target = event.target as HTMLTextAreaElement;
+    target.style.height = 'auto'
+    target.style.height = `${Math.min(target.scrollHeight, 120)}px`
+
+    const parent = textareaRef.value?.parentNode as HTMLElement | null;
+    if (parent) {
+        parent.dataset.replicatedValue = target.value;
     }
 }
 
-onMounted(() => {
-    resizeTextarea
-})
+const sendMessage = () => {
+    if (textareaRef.value) {
+        const message = textareaRef.value.value
+        console.log("Message sent:", message)
+        textareaRef.value.value = ''
+    }
+}
+
+const handleKeydown = (event: KeyboardEvent) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault()
+        sendMessage()
+        messageText.value = ''
+    }
+}
 </script>
 <template>
     <div class="main-chat">
@@ -71,16 +86,19 @@ onMounted(() => {
                         </li>
                     </ul>
                     <!-- Chat input -->
-                    <div class="input-wrapper">
-                        <div class="chat-input">
-                            <div class="grow-wrap">
-                                <textarea ref="textareaRef" v-model="text" @input="resizeTextarea" class="input-field" placeholder="Send a message" type="text" rows="1"/>
+                    <form>
+                        <div class="input-wrapper">
+                            <div class="chat-input">
+                                <div class="grow-wrap">
+                                    <textarea class="input-field" v-model="messageText" placeholder="Send a message" type="text" rows="1" 
+                                    :onInput="handleInput" @keydown="handleKeydown" />
+                                </div>
                             </div>
+                            <button class="send-button">
+                                <img class="send-icon" src="../assets/send.png">
+                            </button>
                         </div>
-                        <button class="send-button">
-                            <img class="send-icon" src="../assets/send.png">
-                        </button>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -208,6 +226,25 @@ onMounted(() => {
     .grow-wrap {
         width: 100%;
         padding-right: 10px;
+        display: grid;
+    }
+
+    .grow-wrap::after {
+        content: attr(data-replicated-value) " ";
+        white-space: pre-wrap;
+        visibility: hidden;
+    }
+    .grow-wrap > textarea {
+        resize: none;
+        overflow: hidden;
+        overflow-y: auto;
+    }
+    .grow-wrap > textarea,
+    .grow-wrap::after {
+        border: none;
+        padding: 0.5rem;
+        font: inherit;
+        grid-area: 1 / 1 / 2 / 2;
     }
     .input-field {
         background-color: transparent;
@@ -222,6 +259,8 @@ onMounted(() => {
         width: 100%;
         overflow-wrap: break-word;
         overflow-y: auto;
+        line-height: 20px;
+        max-height: 120px;
 
         &::placeholder {
             color: rgba(white, 0.5);

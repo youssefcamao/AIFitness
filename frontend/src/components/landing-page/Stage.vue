@@ -21,7 +21,7 @@ const HandleChat = () => {
         </div>
         <a class="button-main button" @click="HandleChat">Join the beta</a>
         <div class="lead-block">
-            <div class="under-text">1834 people joined already</div>
+            <div class="under-text">69420 people joined already</div>
         </div>
     </div>
 </template>
