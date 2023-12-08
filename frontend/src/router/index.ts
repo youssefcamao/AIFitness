@@ -14,7 +14,15 @@ const router = createRouter({
         {
             path: '/chat',
             name: 'chat',
-            component: ChatApp
+            component: ChatApp,
+            children: [
+                {
+                    path: ':sessionId',
+                    name: 'chatSession',
+                    component: ChatApp,
+                    props: true
+                },
+            ]
         },
         {
             path: '/home',

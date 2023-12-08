@@ -1,9 +1,23 @@
 <script setup lang="ts">
 import {ref} from 'vue';
+import {onBeforeRouteUpdate} from 'vue-router';
 import SendIcon from '../../assets/send.png'
+import {useChatSessionApiStore} from '../../stores/chatSessionStore';
+
 
 const textareaRef = ref<HTMLTextAreaElement | null>(null)
 const messageText = ref('')
+const sessionApiStore = useChatSessionApiStore();
+
+
+onBeforeRouteUpdate(async (to, from) => {
+    const sessionId = to.params.sessionId as string;
+    if(to.params.sessionId !== from.params.sessionId) {
+        // Perform the async operation
+        await sessionApiStore.SetCurrentSession(sessionId);
+    }
+});
+
 
 const handleInput = (event: Event) => {
     const target = event.target as HTMLTextAreaElement;
@@ -16,11 +30,12 @@ const handleInput = (event: Event) => {
     }
 }
 
-const sendMessage = () => {
-    if(textareaRef.value) {
-        const message = textareaRef.value.value
-        console.log("Message sent:", message)
-        textareaRef.value.value = ''
+const sendMessage = async () => {
+    if(messageText.value.trim()) {
+        const newMessage = messageText.value.trim();
+        await sessionApiStore.SendMessageAndFetchResponse(newMessage)
+        // Optionally, update the backend with the new message
+        messageText.value = '';
     }
 }
 
@@ -36,22 +51,19 @@ const handleKeydown = (event: KeyboardEvent) => {
     <div class="chat-container">
         <div class="chat-header">
             <span class="chat-title">
-                New chat with AI
+                {{ sessionApiStore.currentSession?.session_title }}
             </span>
         </div>
         <div class="chat-interface">
             <!-- Chat messages -->
             <ul class="chat-messages">
-                <li class="message user-message">
-                    <div class="initials-box">Y</div>
-                    <div class="message-bubble user-message_text">
-                        <p>Hi, how are you can you help me out with my gym exercises today?</p>
-                    </div>
-                </li>
-                <li class="message ai-message">
-                    <div class="initials-box ai-initials-box">AI</div> <!-- Initials box for AI -->
-                    <div class="message-bubble ai-message_text">
-                        <p>Hello, I have a couple of suggestions for you &gt;</p>
+                <li v-for="message in sessionApiStore.currentSession?.messages" :key="message.id"
+                    :class="{'message': true, 'user-message': message.role === 'user', 'ai-message': message.role === 'ai'}">
+                    <div class="initials-box" :class="{'ai-initials-box': message.role === 'ai'}">{{ message.role === 'ai' ?
+                        'AI' : 'Y' }}</div>
+                    <div class="message-bubble"
+                        :class="{'message': true, 'user-message_text': message.role === 'user', 'ai-message_text': message.role === 'ai'}">
+                        <p>{{ message.content }}</p>
                     </div>
                 </li>
             </ul>
@@ -64,7 +76,7 @@ const handleKeydown = (event: KeyboardEvent) => {
                                 rows="1" :onInput="handleInput" @keydown="handleKeydown" />
                         </div>
                     </div>
-                    <button class="send-button">
+                    <button class="send-button" :disabled="!messageText.trim()">
                         <img class="send-icon" :src="SendIcon">
                     </button>
                 </div>
@@ -73,10 +85,30 @@ const handleKeydown = (event: KeyboardEvent) => {
     </div>
 </template>
 <style scoped lang="scss">
+.send-button:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+textarea::-webkit-scrollbar {
+    width: 10px;
+}
+
+textarea::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+textarea::-webkit-scrollbar-thumb {
+    background-color: rgb(27, 27, 27, 0.7);
+    outline: 1px solid rgba($color: #FFFFFF, $alpha: 0.3);
+}
+
 .chat-messages {
     li {
         margin-block: 20px;
     }
+
+    padding-bottom: 100px;
 }
 
 .chat-container {
@@ -84,7 +116,9 @@ const handleKeydown = (event: KeyboardEvent) => {
     flex-direction: column;
     align-items: center;
     padding: 0 24px;
-    height: 100%;
+    height: 100vh;
+    max-height: 100vh;
+    min-width: 500px;
 }
 
 .chat-interface {
@@ -93,6 +127,7 @@ const handleKeydown = (event: KeyboardEvent) => {
     margin-bottom: 15px;
     width: 80%;
     height: 100%;
+    position: relative;
 }
 
 .chat-header {
@@ -117,7 +152,8 @@ const handleKeydown = (event: KeyboardEvent) => {
 
 .chat-messages {
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
+    justify-content: flex-end;
     margin-bottom: 1.5rem;
     flex: 1;
     overflow-y: auto;
@@ -168,6 +204,7 @@ const handleKeydown = (event: KeyboardEvent) => {
 }
 
 .input-wrapper {
+    position: absolute;
     display: flex;
     align-items: center;
     border-radius: 8px;
@@ -175,7 +212,10 @@ const handleKeydown = (event: KeyboardEvent) => {
     padding: 0.5rem 1rem;
     background-color: rgba(#0E1016, 0.7);
     border: 1px solid rgba($color: #FFFFFF, $alpha: 0.3);
-    width: 700px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
 }
 
 .chat-input {
@@ -247,11 +287,5 @@ const handleKeydown = (event: KeyboardEvent) => {
         width: 25px;
         height: 25px;
     }
-}
-
-.chat-container {
-    height: 100%;
-    flex-grow: 1;
-    min-width: 500px;
 }
 </style>

@@ -1,4 +1,17 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import {useChatSessionApiStore} from '../../stores/chatSessionStore';
+import {useRouter} from 'vue-router';
+
+const sessionApiStore = useChatSessionApiStore();
+const router = useRouter();
+
+const navigateToSession = (sessionId: string | undefined) => {
+    router.push({name: 'chatSession', params: {sessionId}});
+};
+const startNewChat = () => {
+    router.push({name: 'chat'});
+};
+</script>
 <template>
     <div class="sidepanel">
         <div class="user">
@@ -6,21 +19,11 @@
             <h4>Yossi Molcho</h4>
             <div class="user-sub">Pro</div>
         </div>
-        <button class="newChat-button"><span>+</span>New chat</button>
+        <button class="newChat-button" @click="startNewChat"><span>+</span>New chat</button>
         <div class="chat-history">
-            <div class="chat-history">
-                <div class="chat-titel">
-                    <div class="titel-text">Teach me payton</div>
-                </div>
-                <div class="chat-titel">
-                    <div class="titel-text">How AI works</div>
-                </div>
-                <div class="chat-titel">
-                    <div class="titel-text">Help me to get a full diet</div>
-                </div>
-                <div class="chat-titel">
-                    <div class="titel-text">New copy for my new </div>
-                </div>
+            <div v-for="session in sessionApiStore.sessionsList" :key="session._id" class="chat-titel"
+                @click="() => navigateToSession(session._id)">
+                <div class="titel-text">{{ session.session_title }}</div>
             </div>
         </div>
     </div>
@@ -29,6 +32,8 @@
 .chat-history {
     width: 100%;
     margin-top: 25px;
+    display: flex;
+    flex-direction: column-reverse;
 }
 
 .chat-titel {
@@ -45,12 +50,10 @@
     }
 
     .titel-text {
-        display: -webkit-box;
-        -webkit-line-clamp: 1;
-        line-clamp: 1;
-        -webkit-box-orient: vertical;
+        text-overflow: ellipsis;
         height: 20px;
         overflow: hidden;
+        white-space: nowrap;
     }
 
     &:hover {
@@ -119,7 +122,7 @@
     align-items: center;
     padding: 0 24px 0;
     height: 100%;
-    width: 250px;
+    min-width: 250px;
     border-right: 2px solid rgba(221, 221, 221, .08);
 }
 </style>

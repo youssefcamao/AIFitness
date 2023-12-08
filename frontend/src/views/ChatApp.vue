@@ -1,6 +1,22 @@
 <script setup lang="ts">
 import SidePanel from '../components/chat-app/SidePanel.vue';
 import ChatInterface from '../components/chat-app/ChatInterface.vue'
+import {useChatSessionApiStore} from '../stores/chatSessionStore'
+import {onMounted} from 'vue';
+import {ChatSession, ChatMessage} from '../apis/ChatSessionApi';
+
+
+
+var sessionApiStore = useChatSessionApiStore()
+
+onMounted(async () => {
+    await sessionApiStore.loadAllSession()
+    let session = sessionApiStore.currentSession
+    console.log("this is the result:")
+    console.log(session)
+})
+
+
 </script>
 <template>
     <div class="main-chat">
