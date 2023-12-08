@@ -6,6 +6,7 @@ import {useChatSessionApiStore} from '../../stores/chatSessionStore';
 
 
 const textareaRef = ref<HTMLTextAreaElement | null>(null)
+const messagesContainer = ref<HTMLUListElement | null>(null);
 const messageText = ref('')
 const sessionApiStore = useChatSessionApiStore();
 
@@ -15,6 +16,9 @@ onBeforeRouteUpdate(async (to, from) => {
     if(to.params.sessionId !== from.params.sessionId) {
         // Perform the async operation
         await sessionApiStore.SetCurrentSession(sessionId);
+    }
+    if(messagesContainer.value) {
+        messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
     }
 });
 
@@ -49,14 +53,16 @@ const handleKeydown = (event: KeyboardEvent) => {
 </script>
 <template>
     <div class="chat-container">
-        <div class="chat-header">
-            <span class="chat-title">
-                {{ sessionApiStore.currentSession?.session_title }}
-            </span>
+        <div class="header-section">
+            <div class="chat-header">
+                <span class="chat-title">
+                    {{ sessionApiStore.currentSession?.session_title }}
+                </span>
+            </div>
         </div>
         <div class="chat-interface">
             <!-- Chat messages -->
-            <ul class="chat-messages">
+            <ul class="chat-messages" ref="messagesContainer">
                 <li v-for="message in sessionApiStore.currentSession?.messages" :key="message.id"
                     :class="{'message': true, 'user-message': message.role === 'user', 'ai-message': message.role === 'ai'}">
                     <div class="initials-box" :class="{'ai-initials-box': message.role === 'ai'}">{{ message.role === 'ai' ?
@@ -103,21 +109,35 @@ textarea::-webkit-scrollbar-thumb {
     outline: 1px solid rgba($color: #FFFFFF, $alpha: 0.3);
 }
 
+.chat-messages::-webkit-scrollbar {
+    width: 8px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 30px;
+}
+
+.header-section {
+    padding: 0 34px;
+}
+
 .chat-messages {
+
     li {
-        margin-block: 20px;
+        margin-bottom: 40px;
     }
 
-    padding-bottom: 100px;
+    overflow-y: auto;
 }
 
 .chat-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 0 24px;
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
     height: 100vh;
-    max-height: 100vh;
+    width: 100%;
     min-width: 500px;
 }
 
@@ -125,9 +145,8 @@ textarea::-webkit-scrollbar-thumb {
     display: flex;
     flex-direction: column;
     margin-bottom: 15px;
-    width: 80%;
     height: 100%;
-    position: relative;
+    overflow: auto;
 }
 
 .chat-header {
@@ -143,7 +162,6 @@ textarea::-webkit-scrollbar-thumb {
     color: white;
     font-weight: bold;
     font-size: 1.125rem;
-    // equivalent to text-lg
 }
 
 .chat-icon-robot {
@@ -153,10 +171,13 @@ textarea::-webkit-scrollbar-thumb {
 .chat-messages {
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
-    margin-bottom: 1.5rem;
-    flex: 1;
-    overflow-y: auto;
+    height: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: calc((100% - 766px) / 2);
+    padding-right: calc((100% - 766px) / 2);
+    padding-top: 20px;
+    overflow-y: scroll;
 }
 
 .message {
@@ -204,11 +225,13 @@ textarea::-webkit-scrollbar-thumb {
 }
 
 .input-wrapper {
-    position: absolute;
+    position: relative;
+    max-width: 766px;
     display: flex;
     align-items: center;
     border-radius: 8px;
     margin: 0 auto;
+    margin-bottom: 20px;
     padding: 0.5rem 1rem;
     background-color: rgba(#0E1016, 0.7);
     border: 1px solid rgba($color: #FFFFFF, $alpha: 0.3);

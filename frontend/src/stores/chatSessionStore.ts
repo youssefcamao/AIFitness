@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia'
-import {ChatClient, Client, IChatSession, ChatMessage} from "../apis/ChatSessionApi";
+import {ChatClient, Client, IChatSession, ChatMessage, } from "../apis/ChatSessionApi";
 
 
 
@@ -13,7 +13,7 @@ export const useChatSessionApiStore = defineStore('chatSessionStore', {
         sessionsList: [] as IChatSession[],
         currentSession: null as IChatSession | null,
         searchInput: "",
-        isLoading: true,
+        isMessageLoading: true,
         isFilterResult: false,
     }),
     actions: {
@@ -24,8 +24,10 @@ export const useChatSessionApiStore = defineStore('chatSessionStore', {
         },
         async SendMessageAndFetchResponse(newMessage: string) {
             if(this.currentSession?._id) {
-                await client.post(this.currentSession?._id, newMessage)
                 this.currentSession.messages?.push(new ChatMessage({role: 'user', content: newMessage}))
+                this.isMessageLoading = true;
+                await client.post(this.currentSession?._id, newMessage).then(response => this.currentSession!.messages?.push(new ChatMessage({role: 'ai', content: response.response})))
+                this.isMessageLoading = false
             }
         },
         async SetCurrentSession(sessionId: string | undefined) {

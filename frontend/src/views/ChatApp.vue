@@ -3,7 +3,6 @@ import SidePanel from '../components/chat-app/SidePanel.vue';
 import ChatInterface from '../components/chat-app/ChatInterface.vue'
 import {useChatSessionApiStore} from '../stores/chatSessionStore'
 import {onMounted} from 'vue';
-import {ChatSession, ChatMessage} from '../apis/ChatSessionApi';
 
 
 
