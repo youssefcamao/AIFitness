@@ -20,7 +20,6 @@ export const useChatSessionApiStore = defineStore('chatSessionStore', {
         async loadAllSession() {
             await chatClient.get().then(result => this.sessionsList = result || Array<IChatSession>())
                 .catch(_ => this.sessionsList = Array<IChatSession>())
-            this.currentSession = this.sessionsList[0]
         },
         async SendMessageAndFetchResponse(newMessage: string) {
             if(this.currentSession?._id) {

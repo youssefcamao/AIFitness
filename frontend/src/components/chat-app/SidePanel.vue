@@ -34,6 +34,16 @@ const startNewChat = () => {
     margin-top: 25px;
     display: flex;
     flex-direction: column-reverse;
+    overflow: auto;
+}
+
+.chat-history::-webkit-scrollbar {
+    width: 5px;
+}
+
+.chat-history::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 30px;
 }
 
 .chat-titel {

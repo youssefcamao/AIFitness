@@ -46,6 +46,7 @@ onMounted(async () => {
     opacity: 0.6;
     border-radius: 100%;
     z-index: -1;
+    animation: scale-up-bl 10s ease-in-out infinite;
 }
 
 .chat-content {
@@ -56,5 +57,18 @@ onMounted(async () => {
     color: white;
     display: flex;
     overflow: hidden;
+}
+
+
+@keyframes scale-up-bl {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
 }
 </style>

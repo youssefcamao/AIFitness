@@ -3,6 +3,8 @@ import {ref} from 'vue';
 import {onBeforeRouteUpdate} from 'vue-router';
 import SendIcon from '../../assets/send.png'
 import {useChatSessionApiStore} from '../../stores/chatSessionStore';
+import Logo from '../../assets/logo.png'
+import NewChat from './NewChat.vue'
 
 
 const textareaRef = ref<HTMLTextAreaElement | null>(null)
@@ -52,29 +54,39 @@ const handleKeydown = (event: KeyboardEvent) => {
 }
 </script>
 <template>
-    <div class="chat-container">
-        <div class="header-section">
+    <div class="chat-container"
+        :class="{'new-chat-grid': !sessionApiStore.currentSession, 'normal-grid-row': sessionApiStore.currentSession}">
+        <div v-if="sessionApiStore.currentSession" class="header-section">
             <div class="chat-header">
                 <span class="chat-title">
-                    {{ sessionApiStore.currentSession?.session_title }}
+                    {{ sessionApiStore.currentSession?.session_title ?? "New Chat With" }}
                 </span>
+                <img v-if="!sessionApiStore.currentSession" :src="Logo" />
             </div>
         </div>
+        <NewChat v-else />
         <div class="chat-interface">
             <!-- Chat messages -->
-            <ul class="chat-messages" ref="messagesContainer">
+            <ul v-if="sessionApiStore.currentSession" class="chat-messages" ref="messagesContainer">
                 <li v-for="message in sessionApiStore.currentSession?.messages" :key="message.id"
                     :class="{'message': true, 'user-message': message.role === 'user', 'ai-message': message.role === 'ai'}">
-                    <div class="initials-box" :class="{'ai-initials-box': message.role === 'ai'}">{{ message.role === 'ai' ?
+                    <div class="initials-box" :class="{'ai-initials-box': message.role === 'ai'}">{{ message.role === 'ai'
+                        ?
                         'AI' : 'Y' }}</div>
                     <div class="message-bubble"
                         :class="{'message': true, 'user-message_text': message.role === 'user', 'ai-message_text': message.role === 'ai'}">
-                        <p>{{ message.content }}</p>
+                        <span class="message-output" v-html="message.content"></span>
                     </div>
                 </li>
             </ul>
             <!-- Chat input -->
             <form>
+                <div v-if="!sessionApiStore.currentSession" class="suggestion-list">
+                    <h3 class="suggestion">Create a custom fitness plan for me</h3>
+                    <h3 class="suggestion">Design a beginner's workout routine</h3>
+                    <h3 class="suggestion">Develop a weight loss and toning program</h3>
+                    <h3 class="suggestion">Enhance my existing workout routine</h3>
+                </div>
                 <div class="input-wrapper">
                     <div class="chat-input">
                         <div class="grow-wrap">
@@ -91,6 +103,57 @@ const handleKeydown = (event: KeyboardEvent) => {
     </div>
 </template>
 <style scoped lang="scss">
+.message-output {
+    display: flex;
+    flex-direction: column;
+    list-style-position: inside;
+
+    &::v-deep h2 {
+        margin-bottom: 20px;
+    }
+
+    &::v-deep h3 {
+        margin: 12px 0px 6px;
+    }
+
+    &::v-deep li {
+        display: flex;
+        flex-direction: column;
+        margin-block: 10px;
+    }
+
+    &::v-deep p {
+        margin: 5px 0px;
+    }
+}
+
+.suggestion-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 7px;
+    margin-bottom: 10px;
+    padding-left: calc((100% - 766px) / 2);
+    padding-right: calc(((100% - 766px) / 2));
+
+    .suggestion {
+        font-weight: 400;
+        font-size: 15px;
+        padding: 20px 10px;
+        background-color: rgba(#0E1016, 0.1);
+        border-radius: 8px;
+        border: 1px solid rgba($color: #FFFFFF, $alpha: 0.3);
+        color: rgba($color: #FFFFFF, $alpha: 0.7);
+        text-align: center;
+        cursor: pointer;
+
+        &:hover {
+            border: 1px solid rgba($color: #FFFFFF, $alpha: 0.9);
+            color: rgba($color: #FFFFFF, $alpha: 1);
+        }
+    }
+}
+
 .send-button:disabled {
     opacity: 0.5;
     cursor: default;
@@ -131,11 +194,18 @@ textarea::-webkit-scrollbar-thumb {
     overflow-y: auto;
 }
 
+.new-chat-grid {
+    grid-template-rows: 1fr auto;
+}
+
+.normal-grid-row {
+    grid-template-rows: auto 1fr;
+}
+
 .chat-container {
     position: relative;
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr;
     height: 100vh;
     width: 100%;
     min-width: 500px;
@@ -156,6 +226,13 @@ textarea::-webkit-scrollbar-thumb {
     padding: 1.5rem;
     width: 100%;
     border-bottom: 2px solid rgba(221, 221, 221, .08);
+
+    img {
+        height: 28px;
+        width: 28px;
+        margin: -10px 0;
+        margin-left: 8px;
+    }
 }
 
 .chat-title {
@@ -175,7 +252,7 @@ textarea::-webkit-scrollbar-thumb {
     margin-left: auto;
     margin-right: auto;
     padding-left: calc((100% - 766px) / 2);
-    padding-right: calc((100% - 766px) / 2);
+    padding-right: calc(((100% - 766px) / 2) - 8px);
     padding-top: 20px;
     overflow-y: scroll;
 }
