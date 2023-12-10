@@ -15,6 +15,7 @@ const sessionApiStore = useChatSessionApiStore();
 
 onBeforeRouteUpdate(async (to, from) => {
     const sessionId = to.params.sessionId as string;
+    console.log(sessionId)
     if(to.params.sessionId !== from.params.sessionId) {
         // Perform the async operation
         await sessionApiStore.SetCurrentSession(sessionId);
@@ -36,12 +37,19 @@ const handleInput = (event: Event) => {
     }
 }
 
-const sendMessage = async () => {
-    if(messageText.value.trim()) {
-        const newMessage = messageText.value.trim();
-        await sessionApiStore.SendMessageAndFetchResponse(newMessage)
-        // Optionally, update the backend with the new message
-        messageText.value = '';
+const sendMessage = async (suggestedMessage: string | undefined = undefined) => {
+    let textAreaInput = messageText.value.trim();
+    if(suggestedMessage || textAreaInput) {
+        let input = '';
+        if(suggestedMessage) {
+            input = suggestedMessage
+        } else {
+            input = textAreaInput
+        }
+        await sessionApiStore.SendMessageAndFetchResponse(input)
+        if(messagesContainer.value) {
+            messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
+        }
     }
 }
 
@@ -51,6 +59,14 @@ const handleKeydown = (event: KeyboardEvent) => {
         sendMessage()
         messageText.value = ''
     }
+}
+const HandleSendButton = () => {
+    sendMessage()
+    messageText.value = ''
+}
+const HandleSuggestions = (event: MouseEvent) => {
+    const target = event.target as HTMLHeadingElement;
+    sendMessage(target.innerText)
 }
 </script>
 <template>
@@ -68,13 +84,15 @@ const handleKeydown = (event: KeyboardEvent) => {
         <div class="chat-interface">
             <!-- Chat messages -->
             <ul v-if="sessionApiStore.currentSession" class="chat-messages" ref="messagesContainer">
-                <li v-for="message in sessionApiStore.currentSession?.messages" :key="message.id"
+                <li v-for="message, index in sessionApiStore.currentSession?.messages" :key="index"
                     :class="{'message': true, 'user-message': message.role === 'user', 'ai-message': message.role === 'ai'}">
                     <div class="initials-box" :class="{'ai-initials-box': message.role === 'ai'}">{{ message.role === 'ai'
                         ?
                         'AI' : 'Y' }}</div>
                     <div class="message-bubble"
                         :class="{'message': true, 'user-message_text': message.role === 'user', 'ai-message_text': message.role === 'ai'}">
+                        <div class="loading" v-if="sessionApiStore.isMessageLoading && message.content == ''">Loading&#8230;
+                        </div>
                         <span class="message-output" v-html="message.content"></span>
                     </div>
                 </li>
@@ -82,10 +100,10 @@ const handleKeydown = (event: KeyboardEvent) => {
             <!-- Chat input -->
             <form>
                 <div v-if="!sessionApiStore.currentSession" class="suggestion-list">
-                    <h3 class="suggestion">Create a custom fitness plan for me</h3>
-                    <h3 class="suggestion">Design a beginner's workout routine</h3>
-                    <h3 class="suggestion">Develop a weight loss and toning program</h3>
-                    <h3 class="suggestion">Enhance my existing workout routine</h3>
+                    <h3 class="suggestion" @click="HandleSuggestions">Create a custom fitness plan for me</h3>
+                    <h3 class="suggestion" @click="HandleSuggestions">Design a beginner's workout routine</h3>
+                    <h3 class="suggestion" @click="HandleSuggestions">Develop a weight loss and toning program</h3>
+                    <h3 class="suggestion" @click="HandleSuggestions">Enhance my existing workout routine</h3>
                 </div>
                 <div class="input-wrapper">
                     <div class="chat-input">
@@ -94,7 +112,7 @@ const handleKeydown = (event: KeyboardEvent) => {
                                 rows="1" :onInput="handleInput" @keydown="handleKeydown" />
                         </div>
                     </div>
-                    <button class="send-button" :disabled="!messageText.trim()">
+                    <button class="send-button" :disabled="!messageText.trim()" @click="HandleSendButton">
                         <img class="send-icon" :src="SendIcon">
                     </button>
                 </div>
@@ -103,30 +121,6 @@ const handleKeydown = (event: KeyboardEvent) => {
     </div>
 </template>
 <style scoped lang="scss">
-.message-output {
-    display: flex;
-    flex-direction: column;
-    list-style-position: inside;
-
-    &::v-deep h2 {
-        margin-bottom: 20px;
-    }
-
-    &::v-deep h3 {
-        margin: 12px 0px 6px;
-    }
-
-    &::v-deep li {
-        display: flex;
-        flex-direction: column;
-        margin-block: 10px;
-    }
-
-    &::v-deep p {
-        margin: 5px 0px;
-    }
-}
-
 .suggestion-list {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -172,26 +166,8 @@ textarea::-webkit-scrollbar-thumb {
     outline: 1px solid rgba($color: #FFFFFF, $alpha: 0.3);
 }
 
-.chat-messages::-webkit-scrollbar {
-    width: 8px;
-}
-
-.chat-messages::-webkit-scrollbar-thumb {
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 30px;
-}
-
 .header-section {
     padding: 0 34px;
-}
-
-.chat-messages {
-
-    li {
-        margin-bottom: 40px;
-    }
-
-    overflow-y: auto;
 }
 
 .new-chat-grid {
@@ -241,65 +217,6 @@ textarea::-webkit-scrollbar-thumb {
     font-size: 1.125rem;
 }
 
-.chat-icon-robot {
-    color: white;
-}
-
-.chat-messages {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: calc((100% - 766px) / 2);
-    padding-right: calc(((100% - 766px) / 2) - 8px);
-    padding-top: 20px;
-    overflow-y: scroll;
-}
-
-.message {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-
-    &.user-message &.ai-message {
-        justify-content: flex-end;
-    }
-
-    .initials-box {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 35px;
-        height: 35px;
-        background-color: #262626;
-        color: white;
-        border-radius: 4px;
-        font-weight: bold;
-        margin-bottom: 10px;
-    }
-
-    .ai-initials-box {
-        background: linear-gradient(180deg, #D6FA00 0%, #6DDE00 100%);
-        font-family: Zian, sans-serif;
-        color: black;
-    }
-
-    .message-bubble {
-        padding: 0.75rem;
-        border-radius: 7px;
-        color: white;
-        font-size: 16px;
-
-        &.user-message_text {
-            background-color: rgba($color: black, $alpha: 0.3);
-        }
-
-        &.ai-message_text {
-            background: linear-gradient(180deg, rgba(214, 250, 0, 0.2) 0%, rgba(109, 222, 0, 0.2) 100%);
-        }
-    }
-}
 
 .input-wrapper {
     position: relative;
@@ -324,11 +241,6 @@ textarea::-webkit-scrollbar-thumb {
     background: transparent;
     flex: 1;
     padding: 0.5rem 0;
-
-    .input-icon {
-        color: red;
-        margin-right: 0.75rem;
-    }
 
     .grow-wrap {
         width: 100%;
@@ -386,6 +298,214 @@ textarea::-webkit-scrollbar-thumb {
     img {
         width: 25px;
         height: 25px;
+    }
+}
+
+.message-output {
+    display: flex;
+    flex-direction: column;
+    list-style-position: inside;
+
+    &::v-deep h2 {
+        margin-bottom: 20px;
+    }
+
+    &::v-deep h3 {
+        margin: 12px 0px 6px;
+    }
+
+    &::v-deep li {
+        display: flex;
+        flex-direction: column;
+        margin-block: 10px;
+    }
+
+    &::v-deep p {
+        margin: 5px 0px;
+    }
+}
+
+.chat-messages::-webkit-scrollbar {
+    width: 8px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 30px;
+}
+
+.chat-messages {
+
+    li {
+        margin-bottom: 40px;
+    }
+
+    overflow-y: auto;
+}
+
+.chat-messages {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: calc((100% - 766px) / 2);
+    padding-right: calc(((100% - 766px) / 2) - 8px);
+    padding-top: 20px;
+    overflow-y: scroll;
+}
+
+.message {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    &.user-message &.ai-message {
+        justify-content: flex-end;
+    }
+
+    .initials-box {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 35px;
+        height: 35px;
+        background-color: #262626;
+        color: white;
+        border-radius: 4px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .ai-initials-box {
+        background: linear-gradient(180deg, #D6FA00 0%, #6DDE00 100%);
+        font-family: Zian, sans-serif;
+        color: black;
+    }
+
+    .message-bubble {
+        padding: 0.75rem;
+        border-radius: 7px;
+        color: white;
+        font-size: 16px;
+
+        &.user-message_text {
+            background-color: rgba($color: black, $alpha: 0.3);
+        }
+
+        &.ai-message_text {
+            background: linear-gradient(180deg, rgba(214, 250, 0, 0.2) 0%, rgba(109, 222, 0, 0.2) 100%);
+        }
+    }
+}
+
+//loading
+.loading {
+    z-index: 999;
+    overflow: visible;
+    padding: 5px;
+}
+
+
+/* :not(:required) hides these rules from IE9 and below */
+.loading:not(:required) {
+    /* hide "loading..." text */
+    font: 0/0 a;
+    color: transparent;
+    text-shadow: none;
+    background-color: transparent;
+    border: 0;
+}
+
+.loading:not(:required):after {
+    content: '';
+    display: block;
+    font-size: 8px;
+    width: 1em;
+    height: 1em;
+    margin-top: 0em;
+    -webkit-animation: spinner 1500ms infinite linear;
+    -moz-animation: spinner 1500ms infinite linear;
+    -ms-animation: spinner 1500ms infinite linear;
+    -o-animation: spinner 1500ms infinite linear;
+    animation: spinner 1500ms infinite linear;
+    border-radius: 0.5em;
+    filter: blur(1px);
+    box-shadow: rgba(#cf0, 0.75) 1.5em 0 0 2px, rgba(0, 0, 0, 0) 1.1em 1.1em 0 0, rgba(#ffa537, 0.75) 0 1.5em 0 2px, rgba(0, 0, 0, 0) -1.1em 1.1em 0 0, rgba(#7af, 0.75) -1.5em 0 0 2px, rgba(0, 0, 0, 0) -1.1em -1.1em 0 0, rgba(#fbc, 0.75) 0 -1.5em 0 2px, rgba(0, 0, 0, 0) 1.1em -1.1em 0 0;
+}
+
+/* Animation */
+
+@-webkit-keyframes spinner {
+    0% {
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@-moz-keyframes spinner {
+    0% {
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@-o-keyframes spinner {
+    0% {
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes spinner {
+    0% {
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
     }
 }
 </style>
