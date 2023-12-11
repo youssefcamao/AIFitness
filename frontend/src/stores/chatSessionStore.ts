@@ -13,7 +13,6 @@ export const useChatSessionApiStore = defineStore('chatSessionStore', {
         currentSession: null as IChatSession | null,
         searchInput: "",
         isMessageLoading: false,
-        isFilterResult: false,
     }),
     actions: {
         async loadAllSession() {

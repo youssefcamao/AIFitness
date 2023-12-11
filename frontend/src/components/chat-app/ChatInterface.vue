@@ -89,8 +89,10 @@ const HandleSuggestions = (event: MouseEvent) => {
                     <div class="initials-box" :class="{'ai-initials-box': message.role === 'ai'}">{{ message.role === 'ai'
                         ?
                         'AI' : 'Y' }}</div>
-                    <div class="message-bubble"
-                        :class="{'message': true, 'user-message_text': message.role === 'user', 'ai-message_text': message.role === 'ai'}">
+                    <div class="message-bubble" :class="{
+                        'message': true, 'user-message_text': message.role === 'user', 'ai-message_text': message.role === 'ai',
+                        'ai-message-loading': sessionApiStore.isMessageLoading && message.content == '', 'ai-message-done': !sessionApiStore.isMessageLoading && message.content != ''
+                    }">
                         <div class="loading" v-if="sessionApiStore.isMessageLoading && message.content == ''">Loading&#8230;
                         </div>
                         <span class="message-output" v-html="message.content"></span>
@@ -395,10 +397,20 @@ textarea::-webkit-scrollbar-thumb {
         }
 
         &.ai-message_text {
-            border: 1px solid rgba(119, 225, 0, 0.50);
+            border-width: 1px;
+            border-style: solid;
             background-color: rgba($color: black, $alpha: 0.3);
         }
+
     }
+}
+
+.ai-message-loading {
+    border-color: rgba(grey, 0.50);
+}
+
+.ai-message-done {
+    border-color: rgba(119, 225, 0, 0.50)
 }
 
 //loading
