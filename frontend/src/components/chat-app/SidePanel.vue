@@ -20,15 +20,27 @@ const startNewChat = () => {
             <div class="user-sub">Pro</div>
         </div>
         <button class="newChat-button" @click="startNewChat"><span>+</span>New chat</button>
-        <div class="chat-history">
-            <div v-for="session in sessionApiStore.sessionsList" :key="session._id" class="chat-titel"
+        <TransitionGroup name="list" tag="ul" class="chat-history">
+            <li v-for="session, index in sessionApiStore.sessionsList" :key="index" class="chat-titel"
+                :class="{'selected-session': sessionApiStore.currentSession && sessionApiStore.currentSession?._id == session._id}"
                 @click="() => navigateToSession(session._id)">
                 <div class="titel-text">{{ session.session_title }}</div>
-            </div>
-        </div>
+            </li>
+        </TransitionGroup>
     </div>
 </template>
 <style scoped lang="scss">
+.list-enter-active,
+.list-leave-active {
+    transition: all 0.5s ease;
+}
+
+.list-enter-from,
+.list-leave-to {
+    opacity: 0;
+    transform: translateX(30px);
+}
+
 .chat-history {
     width: 100%;
     margin-top: 25px;
@@ -69,6 +81,10 @@ const startNewChat = () => {
     &:hover {
         background-color: rgb(0, 0, 0, 0.5);
     }
+}
+
+.selected-session {
+    background-color: rgb(0, 0, 0, 0.5);
 }
 
 .newChat-button {

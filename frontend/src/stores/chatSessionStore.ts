@@ -40,6 +40,7 @@ export const useChatSessionApiStore = defineStore('chatSessionStore', {
                 this.currentSession._id = newChat!.session_id
                 this.currentSession.session_title = newChat!.session_title
                 this.currentSession.messages![this.currentSession.messages!.length - 1].content = newChat!.response
+                this.sessionsList.push(session)
                 this.isMessageLoading = false
             }
         },
