@@ -395,7 +395,8 @@ textarea::-webkit-scrollbar-thumb {
         }
 
         &.ai-message_text {
-            background: linear-gradient(180deg, rgba(214, 250, 0, 0.2) 0%, rgba(109, 222, 0, 0.2) 100%);
+            border: 1px solid rgba(119, 225, 0, 0.50);
+            background-color: rgba($color: black, $alpha: 0.3);
         }
     }
 }

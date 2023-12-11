@@ -1,10 +1,23 @@
 <script setup lang="ts">
 import {useChatSessionApiStore} from '../../stores/chatSessionStore';
 import {useRouter} from 'vue-router';
+import {ref, Ref} from 'vue';
 
 const sessionApiStore = useChatSessionApiStore();
 const router = useRouter();
+const historyList: Ref<HTMLUListElement | null> = ref(null)
+let liLoadedCount = 0;
 
+
+const onEnter = (el: Element) => {
+    liLoadedCount++
+    if(liLoadedCount == sessionApiStore.sessionsList.length) {
+        let listElement = el as HTMLLIElement
+        let parentElement = el.parentElement as HTMLUListElement
+
+        parentElement.scrollTop = listElement.offsetTop - 1000;
+    }
+}
 const navigateToSession = (sessionId: string | undefined) => {
     router.push({name: 'chatSession', params: {sessionId}});
 };
@@ -20,7 +33,7 @@ const startNewChat = () => {
             <div class="user-sub">Pro</div>
         </div>
         <button class="newChat-button" @click="startNewChat"><span>+</span>New chat</button>
-        <TransitionGroup name="list" tag="ul" class="chat-history">
+        <TransitionGroup name="list" tag="ul" class="chat-history" @enter="onEnter" :ref="historyList">
             <li v-for="session, index in sessionApiStore.sessionsList" :key="index" class="chat-titel"
                 :class="{'selected-session': sessionApiStore.currentSession && sessionApiStore.currentSession?._id == session._id}"
                 @click="() => navigateToSession(session._id)">
