@@ -11,14 +11,14 @@ const textareaRef = ref<HTMLTextAreaElement | null>(null)
 const messagesContainer = ref<HTMLUListElement | null>(null);
 const messageText = ref('')
 const sessionApiStore = useChatSessionApiStore();
-
+const userStore = useUserStore();
 
 onBeforeRouteUpdate(async (to, from) => {
     const sessionId = to.params.sessionId as string;
     console.log(sessionId)
     if(to.params.sessionId !== from.params.sessionId) {
         // Perform the async operation
-        await sessionApiStore.SetCurrentSession(sessionId);
+        await sessionApiStore.SetCurrentSession(sessionId, userStore.user);
     }
     if(messagesContainer.value) {
         messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
@@ -46,7 +46,7 @@ const sendMessage = async (suggestedMessage: string | undefined = undefined) => 
         } else {
             input = textAreaInput
         }
-        await sessionApiStore.SendMessageAndFetchResponse(input)
+        await sessionApiStore.SendMessageAndFetchResponse(input, userStore.user)
         if(messagesContainer.value) {
             messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
         }
