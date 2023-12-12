@@ -1,5 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from ..services.chat_service import ChatService
+from ..services.user_service import UserService
+from fastapi import Security, Depends
 from ..llm.title_creator import TitleLlm
 from beanie import PydanticObjectId
 from typing import List, Dict
@@ -28,7 +30,7 @@ async def chat(session_id: PydanticObjectId, message: str) -> HandleChat:
 
 
 @router.post("/chat")
-async def start_new_session(message: str) -> CreateNewChat:
+async def start_new_session(message: str, token: str = Depends(Security(UserService.verify_token))) -> CreateNewChat:
     if not message:
         raise HTTPException(status_code=400, detail="Message is required")
     session = await chat_service.create_new_session(message)
@@ -39,17 +41,17 @@ async def start_new_session(message: str) -> CreateNewChat:
 
 
 @router.get("/chat")
-async def list_sessions() -> List[ChatSession]:
+async def list_sessions(token: str = Depends(Security(UserService.verify_token))) -> List[ChatSession]:
     return await chat_service.get_all_sessions()
 
 
 @router.get("/chat/{session_id}")
-async def list_sessions(session_id: PydanticObjectId) -> ChatSession:
+async def list_sessions(session_id: PydanticObjectId, token: str = Depends(Security(UserService.verify_token))) -> ChatSession:
     return await chat_service.get_session_fromId(session_id=session_id)
 
 
 @router.delete("/chat/{session_id}", status_code=204)
-async def delete_session(session_id: PydanticObjectId):
+async def delete_session(session_id: PydanticObjectId, token: str = Depends(Security(UserService.verify_token))):
     if not session_id:
         raise HTTPException(status_code=400, detail="Id is required")
     session = await chat_service.get_session_fromId(session_id)
