@@ -64,9 +64,16 @@ const HandleSendButton = () => {
     sendMessage()
     messageText.value = ''
 }
-const HandleSuggestions = (event: MouseEvent) => {
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
+const HandleSuggestions = async (event: MouseEvent) => {
     const target = event.target as HTMLHeadingElement;
-    sendMessage(target.innerText)
+    const response = await sendMessage(target.innerText);
+    if (response?.data?.newChatPath) {
+        router.push(response.data.newChatPath);
+    }
 }
 </script>
 <template>
