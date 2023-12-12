@@ -5,6 +5,8 @@ from langchain.prompts import ChatPromptTemplate
 from ..models.chat_session import ChatSession
 from ..config import settings
 from ..llm import prompts
+from ..services.login_service import LoginService
+from ..services.signup_service import SignupService
 from ..llm.title_creator import TitleLlm
 from ..models.chat_session import ChatSession
 from beanie import PydanticObjectId
@@ -31,14 +33,14 @@ class ChatService:
         await session.save()
         return session.get_latest_response()
 
-    async def create_new_session(self, initial_message) -> ChatSession:
-        session = ChatSession()
+    async def create_new_session(self, initial_message, username: str) -> ChatSession:
+        session = ChatSession(owner=username)
         await asyncio.gather(self.run_chat(session, initial_message), self.__setup_title(session, initial_message))
         saved_session = await ChatSession.insert_one(session)
         return saved_session
 
-    async def get_all_sessions(self) -> List[ChatSession]:
-        return await ChatSession.find_all().to_list()
+    async def get_all_sessions(self, username: str) -> List[ChatSession]:
+        return await ChatSession.find(ChatSession.owner == username).to_list()
 
     async def delete_session(self, session_to_delete: ChatSession) -> Dict[str, str]:
         await session_to_delete.delete()
