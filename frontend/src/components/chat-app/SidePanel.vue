@@ -21,8 +21,11 @@ const onEnter = (el: Element) => {
 const navigateToSession = (sessionId: string | undefined) => {
     router.push({name: 'chatSession', params: {sessionId}});
 };
-const startNewChat = () => {
-    router.push({name: 'chat'});
+const startNewChat = async () => {
+    const response = await sessionApiStore.createNewChat();
+    if (response?.data?.newChatPath) {
+        router.push(response.data.newChatPath);
+    }
 };
 </script>
 <template>
