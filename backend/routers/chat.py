@@ -1,17 +1,22 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from ..services.chat_service import ChatService
+from ..services.user_service import get_current_user
 from ..llm.title_creator import TitleLlm
 from beanie import PydanticObjectId
 from typing import List, Dict
 from ..models.chat_session import ChatSession
 from ..models.endpoint_models import CreateNewChat, HandleChat
+from .login import router as login_router
+from .signup import router as signup_router
 
 router = APIRouter()
+router.include_router(login_router, prefix='/login')
+router.include_router(signup_router, prefix='/signup')
 chat_service = ChatService()
 
 
 @router.post("/chat/{session_id}")
-async def chat(session_id: PydanticObjectId, message: str) -> HandleChat:
+async def chat(session_id: PydanticObjectId, message: str, current_user: User = Depends(get_current_user)) -> HandleChat:
     if not message:
         raise HTTPException(status_code=400, detail="Message is required")
     if not session_id:
@@ -28,7 +33,7 @@ async def chat(session_id: PydanticObjectId, message: str) -> HandleChat:
 
 
 @router.post("/chat")
-async def start_new_session(message: str) -> CreateNewChat:
+async def start_new_session(message: str, current_user: User = Depends(get_current_user)) -> CreateNewChat:
     if not message:
         raise HTTPException(status_code=400, detail="Message is required")
     session = await chat_service.create_new_session(message)
