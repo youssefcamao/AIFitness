@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// Need to identify the method to make changes
 </script>
 <template>
     <div class="new-chat-header">
