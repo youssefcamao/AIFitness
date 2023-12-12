@@ -10,6 +10,7 @@ from ..models.chat_session import ChatSession
 from beanie import PydanticObjectId
 from typing import List, Dict
 import asyncio
+from ..services.user_service import UserService
 
 
 class ChatService:
@@ -35,6 +36,8 @@ class ChatService:
         session = ChatSession()
         await asyncio.gather(self.run_chat(session, initial_message), self.__setup_title(session, initial_message))
         saved_session = await ChatSession.insert_one(session)
+        # Add the created session to the user's list of sessions
+        user = await UserService.add_session(user_id=saved_session.user_id, session_id=saved_session.id)
         return saved_session
 
     async def get_all_sessions(self) -> List[ChatSession]:
