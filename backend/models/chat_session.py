@@ -1,7 +1,8 @@
 from typing import List
 from enum import Enum
 from pydantic import BaseModel
-from beanie import Document
+from beanie import Document, PydanticObjectId
+from ..models.user import UserSession
 from ..config import settings
 
 
@@ -17,6 +18,7 @@ class ChatMessage(BaseModel):
 
 
 class ChatSession(Document):
+    user_id: PydanticObjectId
     session_title: str = 'New Chat with AI'
     messages: List[ChatMessage] = []
 
