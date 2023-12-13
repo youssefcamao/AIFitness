@@ -3,6 +3,7 @@ from langchain.cache import InMemoryCache
 from langchain.globals import set_llm_cache
 from langchain.prompts import ChatPromptTemplate
 from ..models.chat_session import ChatSession
+from ..models.user import User, UserSession
 from ..config import settings
 from ..llm import prompts
 from ..llm.title_creator import TitleLlm
@@ -37,8 +38,8 @@ class ChatService:
         saved_session = await ChatSession.insert_one(session)
         return saved_session
 
-    async def get_all_sessions(self) -> List[ChatSession]:
-        return await ChatSession.find_all().to_list()
+    async def get_all_sessions(self, user_id: PydanticObjectId) -> List[ChatSession]:
+        return await ChatSession.find(ChatSession.user_id == user_id).to_list()
 
     async def delete_session(self, session_to_delete: ChatSession) -> Dict[str, str]:
         await session_to_delete.delete()
