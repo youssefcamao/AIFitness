@@ -9,17 +9,17 @@ const HandleChat = () => {
     router.push('/chat')
 }
 
-const navbar = ref<HTMLDivElement | null>(null);
+const navbar = ref<HTMLDivElement | null>(null)
 const isSticky = ref(false)
 const isButtonWhite = ref(false)
 
 
 const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
+    const element = document.getElementById(sectionId)
     if(element) {
-        element.scrollIntoView({behavior: 'smooth'});
+        element.scrollIntoView({behavior: 'smooth'})
     }
-};
+}
 
 
 const handleScroll = () => {
@@ -41,11 +41,11 @@ const handleScroll = () => {
 
 onMounted(() => {
     window.addEventListener('scroll', handleScroll);
-});
+})
 
 onUnmounted(() => {
     window.removeEventListener('scroll', handleScroll);
-});
+})
 </script>
 
 <template>
