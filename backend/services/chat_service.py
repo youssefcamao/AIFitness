@@ -46,10 +46,7 @@ class ChatService:
 
     async def run_chat(self, chat_session: ChatSession, user_message):
         chat_session.add_user_message(user_message)
-        messages = chat_session.get_messages_with_system_instruction(
-            prompts.SYS_PROMPT)
-
-        chat_prompt = ChatPromptTemplate.from_messages(messages)
+        chat_prompt = chat_session.get_chat_prompt_template(prompts.SYS_PROMPT)
         formatted_messages = chat_prompt.format()
         response = await self.chat_model.ainvoke(
             formatted_messages)
