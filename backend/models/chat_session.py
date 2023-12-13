@@ -2,13 +2,14 @@ from typing import List
 from enum import Enum
 from pydantic import BaseModel
 from beanie import Document
+from langchain.prompts import ChatPromptTemplate
+from langchain.prompts.chat import SystemMessage, HumanMessagePromptTemplate, AIMessagePromptTemplate
 from ..config import settings
 
 
 class ChatRole(Enum):
     ai = 0,
     user = 1,
-    system = 2
 
 
 class ChatMessage(BaseModel):
@@ -28,10 +29,10 @@ class ChatSession(Document):
         self.messages.append(ChatMessage(
             role=ChatRole.user.name, content=content))
 
-    def get_messages_with_system_instruction(self, system_instruction: str):
-        messages = [ChatMessage(
-            role=ChatRole.system.name, content=system_instruction)] + self.messages
-        return [(msg.role, msg.content) for msg in messages]
+    def get_chat_prompt_template(self, system_instruction: str):
+        return ChatPromptTemplate.from_messages([SystemMessage(
+            content=system_instruction)] + [AIMessagePromptTemplate.from_template(msg.content) if msg.role == ChatRole.ai.name
+                                            else HumanMessagePromptTemplate.from_template(msg.content) for msg in self.messages])
 
     def get_latest_response(self):
         return self.messages[-1].content if self.messages else ""
