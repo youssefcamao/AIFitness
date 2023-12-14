@@ -5,7 +5,7 @@ import {useRouter} from 'vue-router'
 
 const router = useRouter()
 
-const HandleChat = () => {
+const handleChat = () : void => {
     router.push('/chat')
 }
 
@@ -13,14 +13,14 @@ const navbar = ref<HTMLDivElement | null>(null)
 const isSticky = ref(false)
 const isButtonWhite = ref(false)
 
-const scrollToSection = (sectionId: string) => {
+const scrollToSection = (sectionId: string) : void => {
     const element = document.getElementById(sectionId)
     if(element) {
         element.scrollIntoView({behavior: 'smooth'})
     }
 }
 
-const handleScroll = () => {
+const handleScroll = () : void => {
     if(navbar.value) {
         if(window.scrollY > navbar.value.offsetTop + 80) {
             if(window.scrollY > navbar.value.offsetTop + 630) {
@@ -56,7 +56,7 @@ onUnmounted(() => {
             <a class="navbar-link" @click="scrollToSection('features')">Features</a>
             <a class="navbar-link" @click="scrollToSection('newsletter')">Newsletter</a>
             <a class="join-button" :class="{'button-white': isButtonWhite, 'button-grey': !isButtonWhite}"
-                @click="HandleChat">Try it now</a>
+                @click="handleChat">Try it now</a>
         </div>
     </nav>
 </template>
