@@ -327,6 +327,10 @@ textarea::-webkit-scrollbar-thumb {
     &::v-deep p {
         margin: 5px 0px;
     }
+
+    &::v-deep a {
+        color: #6DDE00;
+    }
 }
 
 .chat-messages::-webkit-scrollbar {
