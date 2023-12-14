@@ -73,7 +73,7 @@ onUnmounted(() => {
     text-align: center;
     font-size: 20px;
     margin-left: 20px;
-    font-family: Zian, sans-serif;
+    font-family: 'Zian', sans-serif;
     color: #DDD;
     letter-spacing: 2px;
     opacity: 95%;
