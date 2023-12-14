@@ -51,6 +51,10 @@ export const useChatSessionApiStore = defineStore('chatSessionStore', {
             if(foundSession) {
                 this.currentSession = foundSession
             }
+        },
+        async DeleteSession(session_id: string) {
+            await client.delete(session_id).then(response => response)
+            await this.loadAllSession()
         }
     }
 })
