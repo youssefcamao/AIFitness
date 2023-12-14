@@ -13,14 +13,12 @@ const navbar = ref<HTMLDivElement | null>(null)
 const isSticky = ref(false)
 const isButtonWhite = ref(false)
 
-
 const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId)
     if(element) {
         element.scrollIntoView({behavior: 'smooth'})
     }
 }
-
 
 const handleScroll = () => {
     if(navbar.value) {
@@ -37,7 +35,6 @@ const handleScroll = () => {
         }
     }
 }
-
 
 onMounted(() => {
     window.addEventListener('scroll', handleScroll);
