@@ -52,3 +52,8 @@
     font-weight: 600;
     font-style: italic;
 }
+
+@font-face {
+    font-family: 'Zian';
+    src: url('./assets/fonts/Zian.ttf') format('truetype');
+}
