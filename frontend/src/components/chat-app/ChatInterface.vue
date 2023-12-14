@@ -12,19 +12,17 @@ const messagesContainer = ref<HTMLUListElement | null>(null);
 const messageText = ref('')
 const sessionApiStore = useChatSessionApiStore();
 
-
 onBeforeRouteUpdate(async (to, from) => {
     const sessionId = to.params.sessionId as string;
     console.log(sessionId)
     if(to.params.sessionId !== from.params.sessionId) {
         // Perform the async operation
-        await sessionApiStore.SetCurrentSession(sessionId);
+        await sessionApiStore.SetCurrentSession(sessionId)
     }
     if(messagesContainer.value) {
-        messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
+        messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight
     }
-});
-
+})
 
 const handleInput = (event: Event) => {
     const target = event.target as HTMLTextAreaElement;
@@ -60,15 +58,18 @@ const handleKeydown = (event: KeyboardEvent) => {
         messageText.value = ''
     }
 }
-const HandleSendButton = () => {
+
+const handleSendButton = () => {
     sendMessage()
     messageText.value = ''
 }
-const HandleSuggestions = (event: MouseEvent) => {
-    const target = event.target as HTMLHeadingElement;
+
+const handleSuggestions = (event: MouseEvent) => {
+    const target = event.target as HTMLHeadingElement
     sendMessage(target.innerText)
 }
 </script>
+
 <template>
     <div class="chat-container"
         :class="{'new-chat-grid': !sessionApiStore.currentSession, 'normal-grid-row': sessionApiStore.currentSession}">
@@ -102,10 +103,10 @@ const HandleSuggestions = (event: MouseEvent) => {
             <!-- Chat input -->
             <form>
                 <div v-if="!sessionApiStore.currentSession" class="suggestion-list">
-                    <h3 class="suggestion" @click="HandleSuggestions">Create a custom fitness plan for me</h3>
-                    <h3 class="suggestion" @click="HandleSuggestions">Design a beginner's workout routine</h3>
-                    <h3 class="suggestion" @click="HandleSuggestions">Develop a weight loss and toning program</h3>
-                    <h3 class="suggestion" @click="HandleSuggestions">Enhance my existing workout routine</h3>
+                    <h3 class="suggestion" @click="handleSuggestions">Create a custom fitness plan for me</h3>
+                    <h3 class="suggestion" @click="handleSuggestions">Design a beginner's workout routine</h3>
+                    <h3 class="suggestion" @click="handleSuggestions">Enhance my existing workout routine</h3>
+                    <h3 class="suggestion" @click="handleSuggestions">Develop a weight loss and toning program</h3>
                 </div>
                 <div class="input-wrapper">
                     <div class="chat-input">
@@ -114,7 +115,7 @@ const HandleSuggestions = (event: MouseEvent) => {
                                 rows="1" :onInput="handleInput" @keydown="handleKeydown" />
                         </div>
                     </div>
-                    <button class="send-button" :disabled="!messageText.trim()" @click="HandleSendButton">
+                    <button class="send-button" :disabled="!messageText.trim()" @click="handleSendButton">
                         <img class="send-icon" :src="SendIcon">
                     </button>
                 </div>
@@ -122,6 +123,7 @@ const HandleSuggestions = (event: MouseEvent) => {
         </div>
     </div>
 </template>
+
 <style scoped lang="scss">
 .suggestion-list {
     display: grid;
