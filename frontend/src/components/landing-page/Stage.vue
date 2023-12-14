@@ -66,7 +66,7 @@ const HandleChat = () => {
 }
 
 .label-logo {
-    font-family: Zian, sans-serif;
+    font-family: 'Zian', sans-serif;
     color: #ddd;
 
     :first-child {
