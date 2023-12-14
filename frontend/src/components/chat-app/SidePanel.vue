@@ -2,10 +2,12 @@
 import {useChatSessionApiStore} from '../../stores/chatSessionStore';
 import {useRouter} from 'vue-router';
 import {ref, Ref} from 'vue';
+import Remove from '../../assets/remove.png'
 
 const sessionApiStore = useChatSessionApiStore();
 const router = useRouter();
 const historyList: Ref<HTMLUListElement | null> = ref(null)
+const hoverIndex = ref(-1)
 let liLoadedCount = 0;
 
 
@@ -24,6 +26,13 @@ const navigateToSession = (sessionId: string | undefined) => {
 const startNewChat = () => {
     router.push({name: 'chat'});
 };
+const delteChat = async (session_id: string | undefined) => {
+    console.log(session_id)
+    if(session_id) {
+        await sessionApiStore.DeleteSession(session_id)
+        router.push({name: 'chat'});
+    }
+}
 </script>
 <template>
     <div class="sidepanel">
@@ -34,15 +43,32 @@ const startNewChat = () => {
         </div>
         <button class="newChat-button" @click="startNewChat"><span>+</span>New chat</button>
         <TransitionGroup name="list" tag="ul" class="chat-history" @enter="onEnter" :ref="historyList">
-            <li v-for="session, index in sessionApiStore.sessionsList" :key="index" class="chat-titel"
+            <li @mouseover="hoverIndex = index" @mouseleave="hoverIndex = -1"
+                v-for="session, index in sessionApiStore.sessionsList" :key="index" class="chat-titel"
                 :class="{'selected-session': sessionApiStore.currentSession && sessionApiStore.currentSession?._id == session._id}"
                 @click="() => navigateToSession(session._id)">
                 <div class="titel-text">{{ session.session_title }}</div>
+                <button v-show="hoverIndex == index" class="remove-button"><img :src="Remove" alt="RM"
+                        @click="() => delteChat(session._id)"></button>
             </li>
         </TransitionGroup>
     </div>
 </template>
 <style scoped lang="scss">
+.remove-button {
+    background: none;
+    width: fit-content;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.remove-button>img {
+    margin: 0;
+}
+
 .list-enter-active,
 .list-leave-active {
     transition: all 0.5s ease;
@@ -73,15 +99,15 @@ const startNewChat = () => {
 
 .chat-titel {
     display: flex;
+    justify-content: space-between;
     font-size: 15px;
     padding: 12px 8px 12px 8px;
     border-radius: 8px;
     cursor: pointer;
 
     img {
-        width: 16px;
-        height: 16px;
-        margin-right: 12px;
+        width: 17px;
+        height: 17px;
     }
 
     .titel-text {
