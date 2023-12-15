@@ -14,9 +14,7 @@ const sessionApiStore = useChatSessionApiStore();
 
 onBeforeRouteUpdate(async (to, from) => {
     const sessionId = to.params.sessionId as string;
-    console.log(sessionId)
     if(to.params.sessionId !== from.params.sessionId) {
-        // Perform the async operation
         await sessionApiStore.SetCurrentSession(sessionId)
     }
     if(messagesContainer.value) {
@@ -328,6 +326,10 @@ textarea::-webkit-scrollbar-thumb {
 
     &::v-deep p {
         margin: 5px 0px;
+    }
+
+    &::v-deep a {
+        color: #6DDE00;
     }
 }
 

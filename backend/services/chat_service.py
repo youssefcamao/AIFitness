@@ -50,7 +50,7 @@ class ChatService:
         formatted_messages = chat_prompt.format()
         response = await self.chat_model.ainvoke(
             formatted_messages)
-        chat_session.add_ai_message(response.content)
+        chat_session.add_ai_message(response.content.replace('AI:', ''))
 
     async def __setup_title(self, session: ChatSession, initial_message: str):
         title = await self.title_creator.generate_summary(initial_message)
