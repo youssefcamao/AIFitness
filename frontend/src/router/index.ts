@@ -2,6 +2,7 @@ import {createRouter, createWebHistory} from 'vue-router'
 import LandingPage from '../views/LandingPage.vue'
 import ChatApp from '../views/ChatApp.vue'
 import NotFound from '../views/NotFound.vue'
+import Login from '../views/Login.vue'
 
 
 const router = createRouter({
@@ -28,6 +29,11 @@ const router = createRouter({
             path: '/home',
             name: 'home',
             component: LandingPage,
+        },
+        {
+            path: '/login',
+            name: 'login',
+            component: Login,
         },
         {
             path: '/:pathMatch(.*)*',

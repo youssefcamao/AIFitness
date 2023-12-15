@@ -4,7 +4,7 @@ import {useRouter} from 'vue-router'
 const router = useRouter()
 
 const HandleChat = () => {
-    router.push('/chat')
+    router.push('/login')
 }
 </script>
 
