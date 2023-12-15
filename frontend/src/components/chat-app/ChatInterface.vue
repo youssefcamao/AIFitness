@@ -133,6 +133,7 @@ const handleSuggestions = (event: MouseEvent) => {
     padding-right: calc(((100% - 766px) / 2));
 
     .suggestion {
+        font-family: 'Euclid SemiBold', sans-serif;
         font-weight: 400;
         font-size: 15px;
         padding: 20px 10px;
@@ -287,6 +288,7 @@ textarea::-webkit-scrollbar-thumb {
         max-height: 120px;
 
         &::placeholder {
+            font-family: 'Euclid Regular', sans-serif;
             color: rgba(white, 0.5);
         }
     }
