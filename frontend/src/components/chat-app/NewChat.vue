@@ -65,6 +65,10 @@
         animation: rotateThis 3s linear infinite;
     }
 
+    h1 {
+        font-family: 'Euclid SemiBold', sans-serif;
+    }
+
     @keyframes rotateThis {
         from {
             transform: rotate(0deg) scale(1);
