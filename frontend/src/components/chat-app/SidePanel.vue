@@ -3,10 +3,10 @@ import {useChatSessionApiStore} from '../../stores/chatSessionStore';
 import {useRouter} from 'vue-router';
 import {ref, Ref} from 'vue';
 
-const sessionApiStore = useChatSessionApiStore();
-const router = useRouter();
+const sessionApiStore = useChatSessionApiStore()
+const router = useRouter()
 const historyList: Ref<HTMLUListElement | null> = ref(null)
-let liLoadedCount = 0;
+let liLoadedCount = 0
 
 
 const onEnter = (el: Element) => {
@@ -15,16 +15,19 @@ const onEnter = (el: Element) => {
         let listElement = el as HTMLLIElement
         let parentElement = el.parentElement as HTMLUListElement
 
-        parentElement.scrollTop = listElement.offsetTop - 1000;
+        parentElement.scrollTop = listElement.offsetTop - 1000
     }
 }
+
 const navigateToSession = (sessionId: string | undefined) => {
-    router.push({name: 'chatSession', params: {sessionId}});
-};
+    router.push({name: 'chatSession', params: {sessionId}})
+}
+
 const startNewChat = () => {
-    router.push({name: 'chat'});
-};
+    router.push({name: 'chat'})
+}
 </script>
+
 <template>
     <div class="sidepanel">
         <div class="user">
@@ -42,6 +45,7 @@ const startNewChat = () => {
         </TransitionGroup>
     </div>
 </template>
+
 <style scoped lang="scss">
 .list-enter-active,
 .list-leave-active {
@@ -105,7 +109,9 @@ const startNewChat = () => {
     align-items: center;
     justify-content: center;
     width: 100%;
-    font-size: 16px;
+    font-size: 17px;
+    font-family: 'Euclid SemiBold', sans-serif;
+    letter-spacing: 0.02rem;
     padding: 8px 0 8px 0;
     background-color: #DDDDDD;
     cursor: pointer;
