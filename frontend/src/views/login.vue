@@ -215,7 +215,6 @@ h2 {
         background-color: rgba(221, 221, 221, .1);
         border: 1px solid rgba(221, 221, 221, .08);
         border-radius: 5px;
-        background: #222;
         color: #ddd;
     }
 
