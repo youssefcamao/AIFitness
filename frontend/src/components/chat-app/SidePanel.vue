@@ -25,6 +25,9 @@ const navigateToSession = (sessionId: string | undefined) => {
 };
 const startNewChat = () => {
     router.push({name: 'chat'});
+    if(sessionApiStore.currentSession) {
+        sessionApiStore.currentSession = null
+    }
 };
 const delteChat = async (session_id: string | undefined) => {
     console.log(session_id)
