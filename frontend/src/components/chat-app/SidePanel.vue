@@ -31,7 +31,7 @@ const startNewChat = () => {
         sessionApiStore.currentSession = null
     }
 };
-const delteChat = async (session_id: string | undefined) => {
+const deleteChat = async (session_id: string | undefined) => {
     console.log(session_id)
     if(session_id) {
         await sessionApiStore.DeleteSession(session_id)
@@ -55,7 +55,7 @@ const delteChat = async (session_id: string | undefined) => {
                 @click="() => navigateToSession(session._id)">
                 <div class="titel-text">{{ session.session_title }}</div>
                 <button v-show="hoverIndex == index" class="remove-button"><img :src="Remove" alt="RM"
-                        @click="() => delteChat(session._id)"></button>
+                        @click="() => deleteChat(session._id)"></button>
             </li>
         </TransitionGroup>
     </div>
