@@ -34,7 +34,7 @@ const startNewChat = () => {
 const deleteChat = async (session_id: string | undefined) => {
     console.log(session_id)
     if(session_id) {
-        await sessionApiStore.DeleteSession(session_id)
+        await sessionApiStore.deleteSession(session_id)
         router.push({name: 'chat'});
     }
 }
