@@ -113,8 +113,8 @@ const deleteChat = async (session_id: string | undefined) => {
     cursor: pointer;
 
     img {
-        width: 17px;
-        height: 17px;
+        width: 20.5px;
+        height: 20.5px;
     }
 
     .titel-text {
