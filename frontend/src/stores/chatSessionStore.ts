@@ -19,7 +19,7 @@ export const useChatSessionApiStore = defineStore('chatSessionStore', {
             await chatClient.get().then(result => this.sessionsList = result || Array<IChatSession>())
                 .catch(_ => this.sessionsList = Array<IChatSession>())
         },
-        async SendMessageAndFetchResponse(newMessage: string) {
+        async sendMessageAndFetchResponse(newMessage: string) {
             let newMessageObj = new ChatMessage({role: 'user', content: newMessage})
             let newResponse = new ChatMessage({role: 'ai', content: ''})
             if(this.currentSession?._id) {
@@ -43,7 +43,7 @@ export const useChatSessionApiStore = defineStore('chatSessionStore', {
                 this.isMessageLoading = false
             }
         },
-        async SetCurrentSession(sessionId: string | undefined) {
+        async setCurrentSession(sessionId: string | undefined) {
             if(!sessionId) {
                 this.currentSession = null
             }
@@ -52,7 +52,7 @@ export const useChatSessionApiStore = defineStore('chatSessionStore', {
                 this.currentSession = foundSession
             }
         },
-        async DeleteSession(session_id: string) {
+        async deleteSession(session_id: string) {
             await client.delete(session_id).then(response => response)
             await this.loadAllSession()
         }
