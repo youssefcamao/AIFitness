@@ -2,7 +2,7 @@ from langchain.chat_models import ChatOpenAI
 from langchain.cache import InMemoryCache
 from langchain.globals import set_llm_cache
 from langchain.prompts import ChatPromptTemplate
-from ..models.chat_session import ChatSession
+from ..models.chat_session import ChatSession, User
 from ..config import settings
 from ..llm import prompts
 from ..llm.title_creator import TitleLlm
@@ -13,12 +13,12 @@ import asyncio
 
 
 class ChatService:
-    def __init__(self):
+    def __init__(self, user: User):
         self.chat_model = ChatOpenAI(
             api_key=settings.OPENAI_API_KEY, model_name=settings.MODEL_NAME)
         set_llm_cache(InMemoryCache())
         self.title_creator = TitleLlm()
-        self.sessions = {}
+        self.user = user
 
     async def get_session_fromId(self, session_id: PydanticObjectId) -> ChatSession | None:
         session_data = await ChatSession.get(session_id)
