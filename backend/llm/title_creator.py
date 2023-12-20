@@ -5,14 +5,18 @@ import emoji
 EXAMPLES = [
     {"user": "Who is the president of Gabon?",
         "assistant": "🇬🇦 President of Gabon"},
-    {"user": "Who is Julien Chaumond?", "assistant": "🧑 Julien Chaumond"},
-    {"user": "what is 1 + 1?", "assistant": "🔢 Simple math operation"},
-    {"user": "What are the latest news?", "assistant": "📰 Latest news"},
+    {"user": "Who is Julien Chaumond?", 
+        "assistant": "🧑 Julien Chaumond"},
+    {"user": "what is 1 + 1?", 
+        "assistant": "🔢 Simple math operation"},
+    {"user": "What are the latest news?", 
+        "assistant": "📰 Latest news"},
     {"user": "How to make a great cheesecake?",
         "assistant": "🍰 Cheesecake recipe"},
     {"user": "what is your favorite movie? do a short answer.",
         "assistant": "🎥 Favorite movie"},
-    {"user": "Explain the concept of artificial intelligence in one sentence", "assistant": "🤖 AI definition"},]
+    {"user": "Explain the concept of artificial intelligence in one sentence", 
+        "assistant": "🤖 AI definition"}]
 
 
 class TitleLlm:
