@@ -15,6 +15,22 @@ class HandleChat(BaseModel):
 
 
 class UserCreate(BaseModel):
+    text: str
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+
+class TokenData(BaseModel):
+    email: str or None = None
+
+
+class SuccessfulSignup(BaseModel):
+    token: Token
     full_name: str
-    email: EmailStr
-    password: str
+
+
+class SignupErrorMessage(BaseModel):
+    message: str

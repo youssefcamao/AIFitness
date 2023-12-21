@@ -3,22 +3,14 @@ from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
 from jose import JWTError, jwt
 from fastapi import HTTPException, status
-from ..models.chat_session import User
-from pydantic import BaseModel
+from ..models.chat_session import User, UserSecurityQuestion
 from typing import Optional
-from ..models.endpoint_models import UserCreate
+from ..models.endpoint_models import TokenData, UserCreate
+from ..models.llm_models import MatchedSignup
+
 
 SECRET_KEY = "83daa0256a2289b0fb23693bf1f6034d44396675749244721a2b20e896e11662"
 ALGORITHM = "HS256"
-
-
-class Token(BaseModel):
-    access_token: str
-    token_type: str
-
-
-class TokenData(BaseModel):
-    email: str or None = None
 
 
 class UserService:
@@ -78,18 +70,20 @@ class UserService:
 
         return user
 
-    async def signup_user(self, user_create: UserCreate) -> Optional[User]:
-        existing_user = await self.get_user_by_email(user_create.email)
+    async def signup_user(self, matched_result: MatchedSignup) -> Optional[User]:
+        existing_user = await self.get_user_by_email(matched_result.email)
         if existing_user:
             # Email already in use, return None or raise an exception
             return None
 
-        hashed_password = self.get_password_hash(user_create.password)
+        hashed_password = self.get_password_hash(matched_result.password)
         new_user = User(
-            full_name=user_create.full_name,
-            email=user_create.email,
+            full_name=matched_result.full_name,
+            email=matched_result.email,
             hashed_password=hashed_password,
-            session_list=[]
+            session_list=[],
+            security_question=UserSecurityQuestion(question=matched_result.security.question,
+                                                   response=matched_result.security.response)
         )
         await User.insert_one(new_user)
         return new_user

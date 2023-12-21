@@ -46,8 +46,14 @@ class ChatSession(BaseModel):
         populate_by_name = True
 
 
+class UserSecurityQuestion(BaseModel):
+    question: str
+    response: str
+
+
 class User(Document):
     full_name: str
     email: str
     hashed_password: str
     session_list: List[ChatSession] = []
+    security_question: UserSecurityQuestion
