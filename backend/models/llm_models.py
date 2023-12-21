@@ -11,6 +11,16 @@ class ErrorMessage:
         return cls(**json_dict)
 
 
+class ValidationResponse:
+    def __init__(self, isResponseValid: bool):
+        self.isResponseValid = isResponseValid
+
+    @classmethod
+    def from_json(cls, json_string):
+        json_dict = json.loads(json_string)
+        return cls(**json_dict)
+
+
 class SecurityQuestion:
     def __init__(self, question: str, response: str):
         self.question = question

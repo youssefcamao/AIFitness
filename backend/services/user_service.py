@@ -5,7 +5,7 @@ from jose import JWTError, jwt
 from fastapi import HTTPException, status
 from ..models.chat_session import User, UserSecurityQuestion
 from typing import Optional
-from ..models.endpoint_models import TokenData, UserCreate
+from ..models.endpoint_models import TokenData, UserCreate, Token
 from ..models.llm_models import MatchedSignup
 
 
@@ -51,12 +51,45 @@ class UserService:
         encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
         return encoded_jwt
 
+    def create_intermediate_token(self, data: dict, expires_delta: timedelta = timedelta(minutes=5)):
+        to_encode = data.copy()
+        expire = datetime.utcnow() + expires_delta
+        to_encode.update({"exp": expire})
+        encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+        return encoded_jwt
+
+    def validate_intermediate_token(self, token: str):
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            if not payload.get("intermediate"):
+                raise JWTError("Invalid intermediate token")
+            # Return the user's email if the token is valid
+            return payload.get("sub")
+        except JWTError as e:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail=str(e),
+                headers={"WWW-Authenticate": "Bearer"}
+            )
+
+    def validate_full_token(self, token: str):
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            if payload.get("intermediate") == True or not payload.get("sub"):
+                raise JWTError("Invalid token")
+            return payload.get("sub")
+        except JWTError as e:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail=str(e),
+                headers={"WWW-Authenticate": "Bearer"}
+            )
+
     async def get_current_user(self, token: str):
         credential_exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                                              detail="Could not validate credentials", headers={"WWW-Authenticate": "Bearer"})
         try:
-            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            email: str = payload.get("sub")
+            email: str = self.validate_full_token(token)
             if email is None:
                 raise credential_exception
 

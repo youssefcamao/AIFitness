@@ -1,4 +1,4 @@
-from .chat_session import ChatSession
+from .chat_session import ChatSession, UserSecurityQuestion
 from pydantic import BaseModel, EmailStr
 from beanie import PydanticObjectId
 
@@ -27,6 +27,16 @@ class TokenData(BaseModel):
     email: str or None = None
 
 
-class SuccessfulSignup(BaseModel):
+class SuccessfulAuth(BaseModel):
     token: Token
     full_name: str
+
+
+class SecurityQuestionAnswer(BaseModel):
+    intermediate_token: str
+    answer: str
+
+
+class SecurityResponseForm(BaseModel):
+    security_question: str
+    intermediate_token: str
