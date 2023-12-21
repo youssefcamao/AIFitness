@@ -15,7 +15,7 @@ const sessionApiStore = useChatSessionApiStore();
 onBeforeRouteUpdate(async (to, from) => {
     const sessionId = to.params.sessionId as string;
     if(to.params.sessionId !== from.params.sessionId) {
-        await sessionApiStore.SetCurrentSession(sessionId)
+        await sessionApiStore.setCurrentSession(sessionId)
     }
     if(messagesContainer.value) {
         messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight
@@ -42,7 +42,7 @@ const sendMessage = async (suggestedMessage: string | undefined = undefined) => 
         } else {
             input = textAreaInput
         }
-        await sessionApiStore.SendMessageAndFetchResponse(input)
+        await sessionApiStore.sendMessageAndFetchResponse(input)
         if(messagesContainer.value) {
             messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
         }
@@ -91,7 +91,7 @@ const handleSuggestions = (event: MouseEvent) => {
                     <div class="message-bubble" :class="{
                         'message': true, 'user-message_text': message.role === 'user', 'ai-message_text': message.role === 'ai',
                         'ai-message-loading': sessionApiStore.isMessageLoading && message.content == '', 'ai-message-done': !sessionApiStore.isMessageLoading && message.content != ''
-                    }">
+                        }">
                         <div class="loading" v-if="sessionApiStore.isMessageLoading && message.content == ''">Loading&#8230;
                         </div>
                         <span class="message-output" v-html="message.content"></span>
@@ -108,7 +108,7 @@ const handleSuggestions = (event: MouseEvent) => {
                 </div>
                 <div class="input-wrapper">
                     <div class="chat-input">
-                        <div class="grow-wrap">
+                        <div class="grow-wrapper">
                             <textarea class="input-field" v-model="messageText" placeholder="Send a message" type="text"
                                 rows="1" :onInput="handleInput" @keydown="handleKeydown" />
                         </div>
@@ -245,26 +245,26 @@ textarea::-webkit-scrollbar-thumb {
     flex: 1;
     padding: 0.5rem 0;
 
-    .grow-wrap {
+    .grow-wrapper {
         width: 100%;
         padding-right: 10px;
         display: grid;
     }
 
-    .grow-wrap::after {
+    .grow-wrapper::after {
         content: attr(data-replicated-value) " ";
         white-space: pre-wrap;
         visibility: hidden;
     }
 
-    .grow-wrap>textarea {
+    .grow-wrapper>textarea {
         resize: none;
         overflow: hidden;
         overflow-y: auto;
     }
 
-    .grow-wrap>textarea,
-    .grow-wrap::after {
+    .grow-wrapper>textarea,
+    .grow-wrapper::after {
         border: none;
         padding: 0.5rem;
         font: inherit;
