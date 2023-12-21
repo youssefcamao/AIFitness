@@ -20,28 +20,38 @@ class ChatService:
         self.title_creator = TitleLlm()
         self.user = user
 
-    async def get_session_fromId(self, session_id: PydanticObjectId) -> ChatSession | None:
-        session_data = await ChatSession.get(session_id)
-        if session_data:
-            return session_data
+    async def get_session_fromId(self, session_id: str) -> ChatSession | None:
+        for session in self.user.session_list:
+            if session.session_id == session_id:
+                return session
         return None
 
-    async def handle_chat(self, session: ChatSession, user_message: str) -> str:
+    async def handle_chat(self, session_id: str, user_message: str) -> str:
+        session = await self.get_session_fromId(session_id)
+        if session is None:
+            raise ValueError("Session not found")
+
         await self.run_chat(session, user_message)
-        await session.save()
+        await self.user.save()
         return session.get_latest_response()
 
-    async def create_new_session(self, initial_message) -> ChatSession:
+    async def create_new_session(self, initial_message: str) -> ChatSession:
         session = ChatSession()
-        await asyncio.gather(self.run_chat(session, initial_message), self.__setup_title(session, initial_message))
-        saved_session = await ChatSession.insert_one(session)
-        return saved_session
+        await asyncio.gather(
+            self.run_chat(session, initial_message),
+            self.__setup_title(session, initial_message)
+        )
+        self.user.session_list.append(session)
+        await self.user.save()
+        return session
 
     async def get_all_sessions(self) -> List[ChatSession]:
-        return await ChatSession.find_all().to_list()
+        return self.user.session_list
 
-    async def delete_session(self, session_to_delete: ChatSession) -> Dict[str, str]:
-        await session_to_delete.delete()
+    async def delete_session(self, session_id: str) -> Dict[str, str]:
+        self.user.session_list = [
+            s for s in self.user.session_list if s.session_id != session_id]
+        await self.user.save()
         return {"message": "Session deleted"}
 
     async def run_chat(self, chat_session: ChatSession, user_message):

@@ -1,12 +1,12 @@
-from ..models.chat_session import ChatSession
-from fastapi.security import OAuth2PasswordBearer
-from pydantic import BaseModel
-from jose import JWTError, jwt
-from passlib.context import CryptContext
 from datetime import datetime, timedelta
-from fastapi import HTTPException, Depends, status
-from models.chat_session import User
-
+from fastapi.security import OAuth2PasswordBearer
+from passlib.context import CryptContext
+from jose import JWTError, jwt
+from fastapi import HTTPException, status
+from ..models.chat_session import User
+from pydantic import BaseModel
+from typing import Optional
+from ..models.endpoint_models import UserCreate
 
 SECRET_KEY = "83daa0256a2289b0fb23693bf1f6034d44396675749244721a2b20e896e11662"
 ALGORITHM = "HS256"
@@ -18,7 +18,7 @@ class Token(BaseModel):
 
 
 class TokenData(BaseModel):
-    username: str or None = None
+    email: str or None = None
 
 
 class UserService:
@@ -32,13 +32,15 @@ class UserService:
     def get_password_hash(self, password):
         return self.pwd_context.hash(password)
 
-    def get_user(self, username: str):
-        user = User.find_one(User.email == username)
+    async def get_user_by_email(self, email: str) -> User | None:
+        user = await User.find_one(User.email == email)
         if user:
             return user
+        else:
+            return None
 
-    def authenticate_user(self, username: str, password: str):
-        user = self.get_user(username)
+    async def authenticate_user(self, email: str, password: str):
+        user = await self.get_user_by_email(email)
         if not user:
             return False
         if not self.verify_password(password, user.hashed_password):
@@ -57,27 +59,37 @@ class UserService:
         encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
         return encoded_jwt
 
-    async def get_current_user(self, token: str = Depends(self.oauth2_scheme)):
+    async def get_current_user(self, token: str):
         credential_exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                                              detail="Could not validate credentials", headers={"WWW-Authenticate": "Bearer"})
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username: str = payload.get("sub")
-            if username is None:
+            email: str = payload.get("sub")
+            if email is None:
                 raise credential_exception
 
-            token_data = TokenData(username=username)
+            token_data = TokenData(email=email)
         except JWTError:
             raise credential_exception
 
-        user = self.get_user(username=token_data.username)
+        user = await self.get_user_by_email(email=token_data.email)
         if user is None:
             raise credential_exception
 
         return user
 
-    async def get_current_active_user(self, current_user: Depends(get_current_user)):
-        if current_user.disabled:
-            raise HTTPException(status_code=400, detail="Inactive user")
+    async def signup_user(self, user_create: UserCreate) -> Optional[User]:
+        existing_user = await self.get_user_by_email(user_create.email)
+        if existing_user:
+            # Email already in use, return None or raise an exception
+            return None
 
-        return current_user
+        hashed_password = self.get_password_hash(user_create.password)
+        new_user = User(
+            full_name=user_create.full_name,
+            email=user_create.email,
+            hashed_password=hashed_password,
+            session_list=[]
+        )
+        await User.insert_one(new_user)
+        return new_user
