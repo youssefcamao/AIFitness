@@ -73,7 +73,6 @@ class UserService:
     async def signup_user(self, matched_result: MatchedSignup) -> Optional[User]:
         existing_user = await self.get_user_by_email(matched_result.email)
         if existing_user:
-            # Email already in use, return None or raise an exception
             return None
 
         hashed_password = self.get_password_hash(matched_result.password)

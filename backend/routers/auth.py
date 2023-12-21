@@ -4,7 +4,7 @@ from datetime import timedelta
 from ..models.chat_session import User
 from ..services.user_service import UserService, UserCreate
 from ..llm.sigunp_matcher import SignupMatcher
-from ..models.endpoint_models import SuccessfulSignup, Token, SignupErrorMessage
+from ..models.endpoint_models import SuccessfulSignup, Token
 from ..models.llm_models import ErrorMessage, MatchedSignup
 
 ACCESS_TOKEN_EXPIRE_MINUTES = 500
@@ -27,7 +27,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@router.post("/signup", response_model=SuccessfulSignup | SignupErrorMessage)
+@router.post("/signup", response_model=SuccessfulSignup)
 async def signup_new_user(user_data: UserCreate):
     if not user_data.text:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
@@ -36,7 +36,8 @@ async def signup_new_user(user_data: UserCreate):
     matched_result = await signup_matcher.match_sigunup_text(user_data.text)
 
     if isinstance(matched_result, ErrorMessage):
-        return SignupErrorMessage(message=matched_result.error)
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail=matched_result.error)
     elif isinstance(matched_result, MatchedSignup):
         existing_user = await user_service.get_user_by_email(matched_result.email)
         if existing_user:

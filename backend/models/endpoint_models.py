@@ -30,7 +30,3 @@ class TokenData(BaseModel):
 class SuccessfulSignup(BaseModel):
     token: Token
     full_name: str
-
-
-class SignupErrorMessage(BaseModel):
-    message: str
