@@ -25,9 +25,9 @@ To use it, go to the `/docker-compose.yaml` file and insert it at `OPEN_API_KEY:
 
 ## Local setup
 
-1. Clone the project to your local machine. Either download the folder directly from Github or clone it via `git clone`.
-2. In your terminal, change to the general directory of the project where you can also find the `docker-compose.yaml` file.
-3. Make sure that your Docker daemon is running. Now execute the command `docker-compose up` and the app will start the build process.
+Clone the project to your local machine. Either download the folder directly from Github or clone it via `git clone`.
+In your terminal, change to the general directory of the project where you can also find the `docker-compose.yaml` file.
+Make sure that your Docker daemon is running. Now execute the command `docker-compose up` and the app will start the build process.
 
 $ git clone https://github.com/youssefcamao/AIFitness.git
 $ docker-compose up
