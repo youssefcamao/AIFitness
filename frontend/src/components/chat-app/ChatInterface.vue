@@ -5,8 +5,10 @@ import SendIcon from '../../assets/send.png'
 import {useChatSessionApiStore} from '../../stores/chatSessionStore';
 import Logo from '../../assets/logo.png'
 import NewChat from './NewChat.vue'
+import {useAuthStore} from '../../stores/authStore'
 
 
+var authStore = useAuthStore()
 const textareaRef = ref<HTMLTextAreaElement | null>(null)
 const messagesContainer = ref<HTMLUListElement | null>(null);
 const messageText = ref('')
@@ -42,7 +44,8 @@ const sendMessage = async (suggestedMessage: string | undefined = undefined) => 
         } else {
             input = textAreaInput
         }
-        await sessionApiStore.sendMessageAndFetchResponse(input)
+        let authToken = authStore.currentAccessToken
+        await sessionApiStore.sendMessageAndFetchResponse(input, authToken)
         if(messagesContainer.value) {
             messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
         }
@@ -87,11 +90,11 @@ const handleSuggestions = (event: MouseEvent) => {
                     :class="{'message': true, 'user-message': message.role === 'user', 'ai-message': message.role === 'ai'}">
                     <div class="initials-box" :class="{'ai-initials-box': message.role === 'ai'}">{{ message.role === 'ai'
                         ?
-                        'AI' : 'Y' }}</div>
+                        'AI' : authStore.userFullName[0].toUpperCase() }}</div>
                     <div class="message-bubble" :class="{
                         'message': true, 'user-message_text': message.role === 'user', 'ai-message_text': message.role === 'ai',
                         'ai-message-loading': sessionApiStore.isMessageLoading && message.content == '', 'ai-message-done': !sessionApiStore.isMessageLoading && message.content != ''
-                        }">
+                    }">
                         <div class="loading" v-if="sessionApiStore.isMessageLoading && message.content == ''">Loading&#8230;
                         </div>
                         <span class="message-output" v-html="message.content"></span>

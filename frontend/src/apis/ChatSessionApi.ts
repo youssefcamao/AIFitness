@@ -8,6 +8,188 @@
 /* eslint-disable */
 // ReSharper disable InconsistentNaming
 
+export class Step1Client {
+    private http: {fetch(url: RequestInfo, init?: RequestInit): Promise<Response>};
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, http?: {fetch(url: RequestInfo, init?: RequestInit): Promise<Response>}) {
+        this.http = http ? http : window as any;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * Login Step1
+     * @return Successful Response
+     */
+    post(body: Body_login_step1_token_step1_post): Promise<SecurityResponseForm> {
+        let url_ = this.baseUrl + "/token/step1";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = Object.keys(body as any).map((key) => {
+            return encodeURIComponent(key) + '=' + encodeURIComponent((body as any)[key]);
+        }).join('&')
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processPost(_response);
+        });
+    }
+
+    protected processPost(response: Response): Promise<SecurityResponseForm> {
+        const status = response.status;
+        let _headers: any = {}; if(response.headers && response.headers.forEach) {response.headers.forEach((v: any, k: any) => _headers[k] = v);};
+        if(status === 200) {
+            return response.text().then((_responseText) => {
+                let result200: any = null;
+                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = SecurityResponseForm.fromJS(resultData200);
+                return result200;
+            });
+        } else if(status === 422) {
+            return response.text().then((_responseText) => {
+                let result422: any = null;
+                let resultData422 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result422 = HTTPValidationError.fromJS(resultData422);
+                return throwException("Validation Error", status, _responseText, _headers, result422);
+            });
+        } else if(status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SecurityResponseForm>(null as any);
+    }
+}
+
+export class Step2Client {
+    private http: {fetch(url: RequestInfo, init?: RequestInit): Promise<Response>};
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, http?: {fetch(url: RequestInfo, init?: RequestInit): Promise<Response>}) {
+        this.http = http ? http : window as any;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * Login For Access Token
+     * @return Successful Response
+     */
+    post(body: SecurityQuestionAnswer): Promise<SuccessfulAuth> {
+        let url_ = this.baseUrl + "/token/step2";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processPost(_response);
+        });
+    }
+
+    protected processPost(response: Response): Promise<SuccessfulAuth> {
+        const status = response.status;
+        let _headers: any = {}; if(response.headers && response.headers.forEach) {response.headers.forEach((v: any, k: any) => _headers[k] = v);};
+        if(status === 200) {
+            return response.text().then((_responseText) => {
+                let result200: any = null;
+                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = SuccessfulAuth.fromJS(resultData200);
+                return result200;
+            });
+        } else if(status === 422) {
+            return response.text().then((_responseText) => {
+                let result422: any = null;
+                let resultData422 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result422 = HTTPValidationError.fromJS(resultData422);
+                return throwException("Validation Error", status, _responseText, _headers, result422);
+            });
+        } else if(status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SuccessfulAuth>(null as any);
+    }
+}
+
+export class SignupClient {
+    private http: {fetch(url: RequestInfo, init?: RequestInit): Promise<Response>};
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, http?: {fetch(url: RequestInfo, init?: RequestInit): Promise<Response>}) {
+        this.http = http ? http : window as any;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * Signup New User
+     * @return Successful Response
+     */
+    post(body: UserCreate): Promise<SuccessfulAuth> {
+        let url_ = this.baseUrl + "/signup";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processPost(_response);
+        });
+    }
+
+    protected processPost(response: Response): Promise<SuccessfulAuth> {
+        const status = response.status;
+        let _headers: any = {}; if(response.headers && response.headers.forEach) {response.headers.forEach((v: any, k: any) => _headers[k] = v);};
+        if(status === 200) {
+            return response.text().then((_responseText) => {
+                let result200: any = null;
+                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = SuccessfulAuth.fromJS(resultData200);
+                return result200;
+            });
+        } else if(status === 422) {
+            return response.text().then((_responseText) => {
+                let result422: any = null;
+                let resultData422 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result422 = HTTPValidationError.fromJS(resultData422);
+                return throwException("Validation Error", status, _responseText, _headers, result422);
+            });
+        } else if(status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SuccessfulAuth>(null as any);
+    }
+}
+
 export class Client {
     private http: {fetch(url: RequestInfo, init?: RequestInit): Promise<Response>};
     private baseUrl: string;
@@ -22,7 +204,7 @@ export class Client {
      * Chat
      * @return Successful Response
      */
-    post(session_id: string, message: string): Promise<HandleChat> {
+    post(session_id: string, message: string, token: string): Promise<HandleChat> {
         let url_ = this.baseUrl + "/chat/{session_id}?";
         if(session_id === undefined || session_id === null)
             throw new Error("The parameter 'session_id' must be defined.");
@@ -31,6 +213,10 @@ export class Client {
             throw new Error("The parameter 'message' must be defined and cannot be null.");
         else
             url_ += "message=" + encodeURIComponent("" + message) + "&";
+        if(token === undefined || token === null)
+            throw new Error("The parameter 'token' must be defined and cannot be null.");
+        else
+            url_ += "token=" + encodeURIComponent("" + token) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: RequestInit = {
@@ -71,62 +257,18 @@ export class Client {
     }
 
     /**
-     * List Sessions
-     * @return Successful Response
-     */
-    get(session_id: string): Promise<ChatSession> {
-        let url_ = this.baseUrl + "/chat/{session_id}";
-        if(session_id === undefined || session_id === null)
-            throw new Error("The parameter 'session_id' must be defined.");
-        url_ = url_.replace("{session_id}", encodeURIComponent("" + session_id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_: RequestInit = {
-            method: "GET",
-            headers: {
-                "Accept": "application/json"
-            }
-        };
-
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processGet(_response);
-        });
-    }
-
-    protected processGet(response: Response): Promise<ChatSession> {
-        const status = response.status;
-        let _headers: any = {}; if(response.headers && response.headers.forEach) {response.headers.forEach((v: any, k: any) => _headers[k] = v);};
-        if(status === 200) {
-            return response.text().then((_responseText) => {
-                let result200: any = null;
-                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                result200 = ChatSession.fromJS(resultData200);
-                return result200;
-            });
-        } else if(status === 422) {
-            return response.text().then((_responseText) => {
-                let result422: any = null;
-                let resultData422 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                result422 = HTTPValidationError.fromJS(resultData422);
-                return throwException("Validation Error", status, _responseText, _headers, result422);
-            });
-        } else if(status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<ChatSession>(null as any);
-    }
-
-    /**
      * Delete Session
      * @return Successful Response
      */
-    delete(session_id: string): Promise<void> {
-        let url_ = this.baseUrl + "/chat/{session_id}";
+    delete(session_id: string, token: string): Promise<void> {
+        let url_ = this.baseUrl + "/chat/{session_id}?";
         if(session_id === undefined || session_id === null)
             throw new Error("The parameter 'session_id' must be defined.");
         url_ = url_.replace("{session_id}", encodeURIComponent("" + session_id));
+        if(token === undefined || token === null)
+            throw new Error("The parameter 'token' must be defined and cannot be null.");
+        else
+            url_ += "token=" + encodeURIComponent("" + token) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: RequestInit = {
@@ -177,12 +319,16 @@ export class ChatClient {
      * Start New Session
      * @return Successful Response
      */
-    post(message: string): Promise<CreateNewChat> {
+    post(message: string, token: string): Promise<CreateNewChat> {
         let url_ = this.baseUrl + "/chat?";
         if(message === undefined || message === null)
             throw new Error("The parameter 'message' must be defined and cannot be null.");
         else
             url_ += "message=" + encodeURIComponent("" + message) + "&";
+        if(token === undefined || token === null)
+            throw new Error("The parameter 'token' must be defined and cannot be null.");
+        else
+            url_ += "token=" + encodeURIComponent("" + token) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: RequestInit = {
@@ -226,8 +372,12 @@ export class ChatClient {
      * List Sessions
      * @return Successful Response
      */
-    get(): Promise<ChatSession[]> {
-        let url_ = this.baseUrl + "/chat";
+    get(token: string): Promise<ChatSession[]> {
+        let url_ = this.baseUrl + "/chat?";
+        if(token === undefined || token === null)
+            throw new Error("The parameter 'token' must be defined and cannot be null.");
+        else
+            url_ += "token=" + encodeURIComponent("" + token) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: RequestInit = {
@@ -259,6 +409,13 @@ export class ChatClient {
                 }
                 return result200;
             });
+        } else if(status === 422) {
+            return response.text().then((_responseText) => {
+                let result422: any = null;
+                let resultData422 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result422 = HTTPValidationError.fromJS(resultData422);
+                return throwException("Validation Error", status, _responseText, _headers, result422);
+            });
         } else if(status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
                 return throwException("An unexpected server error occurred.", status, _responseText, _headers);
@@ -266,6 +423,77 @@ export class ChatClient {
         }
         return Promise.resolve<ChatSession[]>(null as any);
     }
+}
+
+export class Body_login_step1_token_step1_post implements IBody_login_step1_token_step1_post {
+    grant_type?: string;
+    username!: string;
+    password!: string;
+    scope?: string;
+    client_id?: string;
+    client_secret?: string;
+
+    [key: string]: any;
+
+    constructor(data?: IBody_login_step1_token_step1_post) {
+        if(data) {
+            for(var property in data) {
+                if(data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        if(!data) {
+            this.scope = "";
+        }
+    }
+
+    init(_data?: any) {
+        if(_data) {
+            for(var property in _data) {
+                if(_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.grant_type = _data["grant_type"];
+            this.username = _data["username"];
+            this.password = _data["password"];
+            this.scope = _data["scope"] !== undefined ? _data["scope"] : "";
+            this.client_id = _data["client_id"];
+            this.client_secret = _data["client_secret"];
+        }
+    }
+
+    static fromJS(data: any): Body_login_step1_token_step1_post {
+        data = typeof data === 'object' ? data : {};
+        let result = new Body_login_step1_token_step1_post();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for(var property in this) {
+            if(this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["grant_type"] = this.grant_type;
+        data["username"] = this.username;
+        data["password"] = this.password;
+        data["scope"] = this.scope;
+        data["client_id"] = this.client_id;
+        data["client_secret"] = this.client_secret;
+        return data;
+    }
+}
+
+export interface IBody_login_step1_token_step1_post {
+    grant_type?: string;
+    username: string;
+    password: string;
+    scope?: string;
+    client_id?: string;
+    client_secret?: string;
+
+    [key: string]: any;
 }
 
 export class ChatMessage implements IChatMessage {
@@ -321,8 +549,7 @@ export interface IChatMessage {
 }
 
 export class ChatSession implements IChatSession {
-    /** MongoDB document ObjectID */
-    _id?: string;
+    session_id?: string;
     session_title?: string;
     messages?: ChatMessage[];
 
@@ -346,7 +573,7 @@ export class ChatSession implements IChatSession {
                 if(_data.hasOwnProperty(property))
                     this[property] = _data[property];
             }
-            this._id = _data["_id"];
+            this.session_id = _data["session_id"];
             this.session_title = _data["session_title"] !== undefined ? _data["session_title"] : "New Chat with AI";
             if(Array.isArray(_data["messages"])) {
                 this.messages = [] as any;
@@ -369,7 +596,7 @@ export class ChatSession implements IChatSession {
             if(this.hasOwnProperty(property))
                 data[property] = this[property];
         }
-        data["_id"] = this._id;
+        data["session_id"] = this.session_id;
         data["session_title"] = this.session_title;
         if(Array.isArray(this.messages)) {
             data["messages"] = [];
@@ -381,8 +608,7 @@ export class ChatSession implements IChatSession {
 }
 
 export interface IChatSession {
-    /** MongoDB document ObjectID */
-    _id?: string;
+    session_id?: string;
     session_title?: string;
     messages?: ChatMessage[];
 
@@ -553,6 +779,265 @@ export interface IHandleChat {
     [key: string]: any;
 }
 
+export class SecurityQuestionAnswer implements ISecurityQuestionAnswer {
+    intermediate_token!: string;
+    answer!: string;
+
+    [key: string]: any;
+
+    constructor(data?: ISecurityQuestionAnswer) {
+        if(data) {
+            for(var property in data) {
+                if(data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if(_data) {
+            for(var property in _data) {
+                if(_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.intermediate_token = _data["intermediate_token"];
+            this.answer = _data["answer"];
+        }
+    }
+
+    static fromJS(data: any): SecurityQuestionAnswer {
+        data = typeof data === 'object' ? data : {};
+        let result = new SecurityQuestionAnswer();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for(var property in this) {
+            if(this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["intermediate_token"] = this.intermediate_token;
+        data["answer"] = this.answer;
+        return data;
+    }
+}
+
+export interface ISecurityQuestionAnswer {
+    intermediate_token: string;
+    answer: string;
+
+    [key: string]: any;
+}
+
+export class SecurityResponseForm implements ISecurityResponseForm {
+    security_question!: string;
+    intermediate_token!: string;
+
+    [key: string]: any;
+
+    constructor(data?: ISecurityResponseForm) {
+        if(data) {
+            for(var property in data) {
+                if(data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if(_data) {
+            for(var property in _data) {
+                if(_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.security_question = _data["security_question"];
+            this.intermediate_token = _data["intermediate_token"];
+        }
+    }
+
+    static fromJS(data: any): SecurityResponseForm {
+        data = typeof data === 'object' ? data : {};
+        let result = new SecurityResponseForm();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for(var property in this) {
+            if(this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["security_question"] = this.security_question;
+        data["intermediate_token"] = this.intermediate_token;
+        return data;
+    }
+}
+
+export interface ISecurityResponseForm {
+    security_question: string;
+    intermediate_token: string;
+
+    [key: string]: any;
+}
+
+export class SuccessfulAuth implements ISuccessfulAuth {
+    token!: Token;
+    full_name!: string;
+
+    [key: string]: any;
+
+    constructor(data?: ISuccessfulAuth) {
+        if(data) {
+            for(var property in data) {
+                if(data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        if(!data) {
+            this.token = new Token();
+        }
+    }
+
+    init(_data?: any) {
+        if(_data) {
+            for(var property in _data) {
+                if(_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.token = _data["token"] ? Token.fromJS(_data["token"]) : new Token();
+            this.full_name = _data["full_name"];
+        }
+    }
+
+    static fromJS(data: any): SuccessfulAuth {
+        data = typeof data === 'object' ? data : {};
+        let result = new SuccessfulAuth();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for(var property in this) {
+            if(this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["token"] = this.token ? this.token.toJSON() : <any>undefined;
+        data["full_name"] = this.full_name;
+        return data;
+    }
+}
+
+export interface ISuccessfulAuth {
+    token: Token;
+    full_name: string;
+
+    [key: string]: any;
+}
+
+export class Token implements IToken {
+    access_token!: string;
+    token_type!: string;
+
+    [key: string]: any;
+
+    constructor(data?: IToken) {
+        if(data) {
+            for(var property in data) {
+                if(data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if(_data) {
+            for(var property in _data) {
+                if(_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.access_token = _data["access_token"];
+            this.token_type = _data["token_type"];
+        }
+    }
+
+    static fromJS(data: any): Token {
+        data = typeof data === 'object' ? data : {};
+        let result = new Token();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for(var property in this) {
+            if(this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["access_token"] = this.access_token;
+        data["token_type"] = this.token_type;
+        return data;
+    }
+}
+
+export interface IToken {
+    access_token: string;
+    token_type: string;
+
+    [key: string]: any;
+}
+
+export class UserCreate implements IUserCreate {
+    text!: string;
+
+    [key: string]: any;
+
+    constructor(data?: IUserCreate) {
+        if(data) {
+            for(var property in data) {
+                if(data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if(_data) {
+            for(var property in _data) {
+                if(_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.text = _data["text"];
+        }
+    }
+
+    static fromJS(data: any): UserCreate {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserCreate();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for(var property in this) {
+            if(this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["text"] = this.text;
+        return data;
+    }
+}
+
+export interface IUserCreate {
+    text: string;
+
+    [key: string]: any;
+}
+
 export class ValidationError implements IValidationError {
     loc!: Loc[];
     msg!: string;
@@ -620,7 +1105,6 @@ export interface IValidationError {
     [key: string]: any;
 }
 
-
 export class Loc implements ILoc {
 
     [key: string]: any;
@@ -666,7 +1150,7 @@ export interface ILoc {
 }
 
 export class ApiException extends Error {
-    override message: string;
+    message: string;
     status: number;
     response: string;
     headers: {[key: string]: any;};
