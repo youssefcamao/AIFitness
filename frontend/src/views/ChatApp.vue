@@ -16,9 +16,8 @@ onMounted(async () => {
     console.log("this is the result:")
     console.log(session)
 })
-
-
 </script>
+
 <template>
     <div class="main-chat">
         <div class="chat-neon"></div>

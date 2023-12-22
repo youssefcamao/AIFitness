@@ -27,7 +27,7 @@ export const useChatSessionApiStore = defineStore('chatSessionStore', {
             }
 
         },
-        async SendMessageAndFetchResponse(newMessage: string, token: string) {
+        async sendMessageAndFetchResponse(newMessage: string, token: string) {
             let newMessageObj = new ChatMessage({role: 'user', content: newMessage})
             let newResponse = new ChatMessage({role: 'ai', content: ''})
             if(this.currentSession?.session_id) {
@@ -53,7 +53,7 @@ export const useChatSessionApiStore = defineStore('chatSessionStore', {
                 this.isMessageLoading = false
             }
         },
-        async SetCurrentSession(sessionId: string | undefined) {
+        async setCurrentSession(sessionId: string | undefined) {
             if(!sessionId) {
                 this.currentSession = null
             }
@@ -62,7 +62,7 @@ export const useChatSessionApiStore = defineStore('chatSessionStore', {
                 this.currentSession = foundSession
             }
         },
-        async DeleteSession(session_id: string, token: string) {
+        async deleteSession(session_id: string, token: string) {
             await client.delete(session_id, token).then(response => response)
             await this.loadAllSession(token)
         },

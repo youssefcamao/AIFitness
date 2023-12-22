@@ -17,7 +17,7 @@ const sessionApiStore = useChatSessionApiStore();
 onBeforeRouteUpdate(async (to, from) => {
     const sessionId = to.params.sessionId as string;
     if(to.params.sessionId !== from.params.sessionId) {
-        await sessionApiStore.SetCurrentSession(sessionId)
+        await sessionApiStore.setCurrentSession(sessionId)
     }
     if(messagesContainer.value) {
         messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight
@@ -45,7 +45,7 @@ const sendMessage = async (suggestedMessage: string | undefined = undefined) => 
             input = textAreaInput
         }
         let authToken = authStore.currentAccessToken
-        await sessionApiStore.SendMessageAndFetchResponse(input, authToken)
+        await sessionApiStore.sendMessageAndFetchResponse(input, authToken)
         if(messagesContainer.value) {
             messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
         }
@@ -111,7 +111,7 @@ const handleSuggestions = (event: MouseEvent) => {
                 </div>
                 <div class="input-wrapper">
                     <div class="chat-input">
-                        <div class="grow-wrap">
+                        <div class="grow-wrapper">
                             <textarea class="input-field" v-model="messageText" placeholder="Send a message" type="text"
                                 rows="1" :onInput="handleInput" @keydown="handleKeydown" />
                         </div>
@@ -136,6 +136,7 @@ const handleSuggestions = (event: MouseEvent) => {
     padding-right: calc(((100% - 766px) / 2));
 
     .suggestion {
+        font-family: 'Euclid SemiBold', sans-serif;
         font-weight: 400;
         font-size: 15px;
         padding: 20px 10px;
@@ -247,26 +248,26 @@ textarea::-webkit-scrollbar-thumb {
     flex: 1;
     padding: 0.5rem 0;
 
-    .grow-wrap {
+    .grow-wrapper {
         width: 100%;
         padding-right: 10px;
         display: grid;
     }
 
-    .grow-wrap::after {
+    .grow-wrapper::after {
         content: attr(data-replicated-value) " ";
         white-space: pre-wrap;
         visibility: hidden;
     }
 
-    .grow-wrap>textarea {
+    .grow-wrapper>textarea {
         resize: none;
         overflow: hidden;
         overflow-y: auto;
     }
 
-    .grow-wrap>textarea,
-    .grow-wrap::after {
+    .grow-wrapper>textarea,
+    .grow-wrapper::after {
         border: none;
         padding: 0.5rem;
         font: inherit;
@@ -290,6 +291,7 @@ textarea::-webkit-scrollbar-thumb {
         max-height: 120px;
 
         &::placeholder {
+            font-family: 'Euclid Regular', sans-serif;
             color: rgba(white, 0.5);
         }
     }

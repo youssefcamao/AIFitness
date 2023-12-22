@@ -27,23 +27,25 @@ const onEnter = (el: Element) => {
         let listElement = el as HTMLLIElement
         let parentElement = el.parentElement as HTMLUListElement
 
-        parentElement.scrollTop = listElement.offsetTop - 1000;
+        parentElement.scrollTop = listElement.offsetTop - 1000
     }
 }
+
 const navigateToSession = (sessionId: string | undefined) => {
-    router.push({name: 'chatSession', params: {sessionId}});
-};
+    router.push({name: 'chatSession', params: {sessionId}})
+}
+
 const startNewChat = () => {
     router.push({name: 'chat'});
     if(sessionApiStore.currentSession) {
         sessionApiStore.currentSession = null
     }
 };
-const delteChat = async (session_id: string | undefined) => {
+const deleteChat = async (session_id: string | undefined) => {
     console.log(session_id)
     if(session_id) {
         let authToken = authStore.currentAccessToken
-        await sessionApiStore.DeleteSession(session_id, authToken)
+        await sessionApiStore.deleteSession(session_id, authToken)
         router.push({name: 'chat'});
     }
 }
@@ -52,6 +54,7 @@ const ClickLogout = async () => {
     router.push({name: 'login'});
 }
 </script>
+
 <template>
     <div class="sidepanel">
         <div class="user">
@@ -69,11 +72,12 @@ const ClickLogout = async () => {
                 @click="() => navigateToSession(session.session_id)">
                 <div class="titel-text">{{ session.session_title }}</div>
                 <button v-show="hoverIndex == index" class="remove-button"><img :src="Remove" alt="RM"
-                        @click="() => delteChat(session.session_id)"></button>
+                        @click="() => deleteChat(session.session_id)"></button>
             </li>
         </TransitionGroup>
     </div>
 </template>
+
 <style scoped lang="scss">
 .list-loading {
     margin-top: 40px;
@@ -156,7 +160,9 @@ const ClickLogout = async () => {
     align-items: center;
     justify-content: center;
     width: 100%;
-    font-size: 16px;
+    font-size: 17px;
+    font-family: 'Euclid SemiBold', sans-serif;
+    letter-spacing: 0.02rem;
     padding: 8px 0 8px 0;
     background-color: #DDDDDD;
     cursor: pointer;

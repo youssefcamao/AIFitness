@@ -6,7 +6,7 @@
             <div class="logo-text">AI</div>
         </div>
 
-        <h1>How can i help you today?</h1>
+        <h1>How can I help you today?</h1>
     </div>
 </template>
 <style scoped lang="scss">
@@ -63,6 +63,10 @@
         @include border-gradient(#D6FA00, #0085de);
 
         animation: rotateThis 3s linear infinite;
+    }
+
+    h1 {
+        font-family: 'Euclid SemiBold', sans-serif;
     }
 
     @keyframes rotateThis {
