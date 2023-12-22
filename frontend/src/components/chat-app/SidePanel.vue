@@ -60,6 +60,8 @@ const ClickLogout = async () => {
             <img :src="Logout" @click="ClickLogout">
         </div>
         <button class="newChat-button" @click="startNewChat"><span>+</span>New chat</button>
+        <div class="loading list-loading" v-if="sessionApiStore.sessionsList.length == 0">Loading&#8230;
+        </div>
         <TransitionGroup name="list" tag="ul" class="chat-history" @enter="onEnter" :ref="historyList">
             <li @mouseover="hoverIndex = index" @mouseleave="hoverIndex = -1"
                 v-for="session, index in sessionApiStore.sessionsList" :key="index" class="chat-titel"
@@ -73,6 +75,11 @@ const ClickLogout = async () => {
     </div>
 </template>
 <style scoped lang="scss">
+.list-loading {
+    margin-top: 40px;
+    opacity: 0.5;
+}
+
 .remove-button {
     background: none;
     width: fit-content;
