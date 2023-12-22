@@ -34,5 +34,5 @@ To use it, go to the `/docker-compose.yaml` file and insert it at `OPEN_API_KEY:
 
 ## Using the app
 
-1. If the Docker Container are properly running, go to [localhost:80](https://localhost:80) in your browser.
+1. If the Docker Container are properly running, go to [localhost:80](localhost:80) in your browser.
 2. To use the 
