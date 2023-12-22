@@ -145,7 +145,7 @@ const resizeTextarea = () => {
                     <div class="input-group">
                         <label for="password">Password</label>
                         <input type="password" id="password" v-model="passwordLogin"
-                            :class="{'error-input': isLoginStep1Error}" placeholder="************" required>
+                            :class="{'error-input': isLoginStep1Error}" placeholder="••••••••••••" required>
                     </div>
                     <div class="checkbox-group">
                         <input type="checkbox" id="remember" v-model="rememberMe">
