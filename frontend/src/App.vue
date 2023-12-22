@@ -7,4 +7,16 @@ import {RouterView} from 'vue-router'
     <RouterView />
 </template>
 
-<style scoped lang="scss"></style>
+<style lang="scss">
+@keyframes scale-up-bl {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+}
+</style>

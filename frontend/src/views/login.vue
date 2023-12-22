@@ -18,6 +18,7 @@ const textArea = ref<HTMLAreaElement | null>(null)
 const signupInput = ref('')
 const securityQuestion = ref('')
 const securityAsnwer = ref('')
+const isLoading = ref(false)
 
 
 const isLogin = ref(true)
@@ -49,7 +50,9 @@ const handleKeydown = async (event: KeyboardEvent) => {
     let text = signupInput.value
     if(event.key === 'Enter' && !event.shiftKey && text) {
         event.preventDefault()
+        isLoading.value = true
         await authStore.signup(text)
+        isLoading.value = false
         if(authStore.signupError) {
             isSignupError.value = true
             return
@@ -86,11 +89,26 @@ const doLoginStep2 = async () => {
         }
     }
 };
+
+const switchWindow = () => {
+    isLogin.value = !isLogin.value
+    isLoginStep1Error.value = false
+    isLoginStep2Error.value = false
+    isSignupError.value = false
+}
 </script>
 <template>
     <div class="main-view">
-        <div class="login-neon left-neon"></div>
-        <div class="login-neon right-neon"></div>
+        <div class="login-neon left-neon" :class="{
+            'standard-neon': !isLoginStep1Error && !isLoginStep2Error && !isSignupError && !isLoading,
+            'error-neon': isLoginStep1Error || isLoginStep2Error || isSignupError && !isLoading,
+            'loading-neon': !isLoginStep1Error && !isLoginStep2Error && !isSignupError && isLoading
+        }"></div>
+        <div class="login-neon right-neon" :class="{
+            'standard-neon': !isLoginStep1Error && !isLoginStep2Error && !isSignupError && !isLoading,
+            'error-neon': isLoginStep1Error || isLoginStep2Error || isSignupError && !isLoading,
+            'loading-neon': !isLoginStep1Error && !isLoginStep2Error && !isSignupError && isLoading
+        }"></div>
         <div class="login-container">
             <div class="login-card" v-if="isLogin && isLoginStep1">
                 <h5>WELCOME BACK</h5>
@@ -112,7 +130,7 @@ const doLoginStep2 = async () => {
                     </div>
                     <button type="submit" class="login-btn button">Continue</button>
                     <p class="error-text" v-if="isLoginStep1Error">{{ authStore.loginError }}</p>
-                    <p class="signup-text">New User? <a @click="isLogin = false">Sign up here</a></p>
+                    <p class="signup-text">New User? <a @click="switchWindow">Sign up here</a></p>
                 </form>
             </div>
             <div class="login-card" v-if="isLogin && !isLoginStep1 && !isLoginStep1Error">
@@ -139,11 +157,11 @@ const doLoginStep2 = async () => {
                     <img :src="Logo">
                     <p>{{ signupLiveMessage }}</p>
                 </div>
-                <textarea name="signupText" id="signupText" cols="30" rows="7" v-model="signupInput"
+                <textarea name="signupText" id="signupText" cols="30" rows="7" spellcheck="false" v-model="signupInput"
                     placeholder="Write about yourself ..." :class="{'hide': isSignupInputHidden}" ref="textArea"
-                    @keydown="handleKeydown"></textarea>
+                    @keydown="handleKeydown" :disabled="isLoading"></textarea>
                 <p class="error-text" v-if="isSignupError">{{ authStore.signupError }}</p>
-                <p class="signup-text">Already have an account? <a @click="isLogin = true">LOGIN HERE</a></p>
+                <p class="signup-text">Already have an account? <a @click="switchWindow">LOGIN HERE</a></p>
             </div>
         </div>
     </div>
@@ -235,10 +253,23 @@ const doLoginStep2 = async () => {
     width: 80vw;
     height: 80vh;
     filter: blur(24vh);
-    background-color: #1056CB;
     opacity: 0.6;
     border-radius: 100%;
     z-index: -1;
+    animation: scale-up-bl 10s ease-in-out infinite;
+    transition: background-color 1s ease-in-out;
+}
+
+.standard-neon {
+    background-color: #1056CB;
+}
+
+.loading-neon {
+    background-color: #b8e70d;
+}
+
+.error-neon {
+    background-color: #d11414;
 }
 
 .left-neon {
