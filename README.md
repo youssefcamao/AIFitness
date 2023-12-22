@@ -26,7 +26,9 @@ To use it, go to the `/docker-compose.yaml` file and insert it at `OPEN_API_KEY:
 ## Local setup
 
 1. Clone the project to your local machine. Either download the folder directly from Github or clone it via `git clone`.
+
 2. In your terminal, change to the general directory of the project where you can also find the `docker-compose.yaml` file.
+
 3. Make sure that your Docker daemon is running. Now execute the command `docker-compose up` and the app will start the build process.
 
   $ git clone https://github.com/youssefcamao/AIFitness.git
@@ -34,5 +36,17 @@ To use it, go to the `/docker-compose.yaml` file and insert it at `OPEN_API_KEY:
 
 ## Using the app
 
-1. If the Docker Container are properly running, go to [localhost:80](localhost:80) in your browser.
-2. To use the 
+1. Go to [localhost:80](localhost:80)
+
+2. Open the chat link with the button `Try it now`.
+
+3. Go to `Sign up here`
+
+<img src="screenshots/signup_button.png" alt="signup">
+
+4. Type in the request data: `name, email, security question and answer`
+Use any kind of dummy data, there is no actual email verification process.
+
+<img src="screenshots/singup_mask.png" alt="signup mask">
+
+5. You should be logged in now. If you want to log out and back in again, you need your email, password and the answer to your security question.
