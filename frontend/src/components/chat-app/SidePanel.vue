@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {useChatSessionApiStore} from '../../stores/chatSessionStore';
 import {useRouter} from 'vue-router';
-import {ref, Ref} from 'vue';
+import {ref, Ref, computed} from 'vue';
 import Remove from '../../assets/remove.png'
 import {useAuthStore} from '../../stores/authStore'
 
@@ -13,6 +13,12 @@ const historyList: Ref<HTMLUListElement | null> = ref(null)
 const hoverIndex = ref(-1)
 let liLoadedCount = 0;
 
+const formattedFullName = computed(() => {
+    return authStore.userFullName
+        .split(' ')
+        .map(name => name.charAt(0).toUpperCase() + name.slice(1).toLowerCase())
+        .join(' ');
+});
 
 const onEnter = (el: Element) => {
     liLoadedCount++
@@ -44,8 +50,8 @@ const delteChat = async (session_id: string | undefined) => {
 <template>
     <div class="sidepanel">
         <div class="user">
-            <img class="mask-group" src="../../assets/test_image.png" />
-            <h4>{{ authStore.userFullName }}</h4>
+            <div class="mask-group">{{ formattedFullName[0] }}</div>
+            <h4>{{ formattedFullName }}</h4>
             <div class="user-sub">Pro</div>
         </div>
         <button class="newChat-button" @click="startNewChat"><span>+</span>New chat</button>
@@ -166,11 +172,16 @@ const delteChat = async (session_id: string | undefined) => {
     border-bottom: 2px solid rgba(221, 221, 221, .08);
     margin-bottom: 12px;
 
-    img {
+    .mask-group {
         width: 32px;
         height: 32px;
         border-radius: 50%;
         margin-right: 10px;
+        background-color: #262626;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
     }
 
     h4 {
