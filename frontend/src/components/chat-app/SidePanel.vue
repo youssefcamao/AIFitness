@@ -4,6 +4,7 @@ import {useRouter} from 'vue-router';
 import {ref, Ref, computed} from 'vue';
 import Remove from '../../assets/remove.png'
 import {useAuthStore} from '../../stores/authStore'
+import Logout from '../../assets/logout.png'
 
 
 var authStore = useAuthStore()
@@ -46,13 +47,17 @@ const delteChat = async (session_id: string | undefined) => {
         router.push({name: 'chat'});
     }
 }
+const ClickLogout = async () => {
+    authStore.currentAccessToken = ''
+    router.push({name: 'login'});
+}
 </script>
 <template>
     <div class="sidepanel">
         <div class="user">
             <div class="mask-group">{{ formattedFullName[0] }}</div>
             <h4>{{ formattedFullName }}</h4>
-            <div class="user-sub">Pro</div>
+            <img :src="Logout" @click="ClickLogout">
         </div>
         <button class="newChat-button" @click="startNewChat"><span>+</span>New chat</button>
         <TransitionGroup name="list" tag="ul" class="chat-history" @enter="onEnter" :ref="historyList">
@@ -188,14 +193,13 @@ const delteChat = async (session_id: string | undefined) => {
         margin-right: auto;
     }
 
-    .user-sub {
+    img {
         display: flex;
         justify-content: center;
         align-items: center;
-        background-color: #F6E6A6;
-        color: #8D7324;
-        border-radius: 4px;
-        padding: 2px 8px;
+        width: 23px;
+        height: 23px;
+        cursor: pointer;
     }
 }
 
