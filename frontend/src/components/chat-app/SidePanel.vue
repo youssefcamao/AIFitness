@@ -3,7 +3,10 @@ import {useChatSessionApiStore} from '../../stores/chatSessionStore';
 import {useRouter} from 'vue-router';
 import {ref, Ref} from 'vue';
 import Remove from '../../assets/remove.png'
+import {useAuthStore} from '../../stores/authStore'
 
+
+var authStore = useAuthStore()
 const sessionApiStore = useChatSessionApiStore();
 const router = useRouter();
 const historyList: Ref<HTMLUListElement | null> = ref(null)
@@ -32,7 +35,8 @@ const startNewChat = () => {
 const delteChat = async (session_id: string | undefined) => {
     console.log(session_id)
     if(session_id) {
-        await sessionApiStore.DeleteSession(session_id)
+        let authToken = authStore.currentAccessToken
+        await sessionApiStore.DeleteSession(session_id, authToken)
         router.push({name: 'chat'});
     }
 }
@@ -41,18 +45,18 @@ const delteChat = async (session_id: string | undefined) => {
     <div class="sidepanel">
         <div class="user">
             <img class="mask-group" src="../../assets/test_image.png" />
-            <h4>Yossi Molcho</h4>
+            <h4>{{ authStore.userFullName }}</h4>
             <div class="user-sub">Pro</div>
         </div>
         <button class="newChat-button" @click="startNewChat"><span>+</span>New chat</button>
         <TransitionGroup name="list" tag="ul" class="chat-history" @enter="onEnter" :ref="historyList">
             <li @mouseover="hoverIndex = index" @mouseleave="hoverIndex = -1"
                 v-for="session, index in sessionApiStore.sessionsList" :key="index" class="chat-titel"
-                :class="{'selected-session': sessionApiStore.currentSession && sessionApiStore.currentSession?._id == session._id}"
-                @click="() => navigateToSession(session._id)">
+                :class="{'selected-session': sessionApiStore.currentSession && sessionApiStore.currentSession?.session_id == session.session_id}"
+                @click="() => navigateToSession(session.session_id)">
                 <div class="titel-text">{{ session.session_title }}</div>
                 <button v-show="hoverIndex == index" class="remove-button"><img :src="Remove" alt="RM"
-                        @click="() => delteChat(session._id)"></button>
+                        @click="() => delteChat(session.session_id)"></button>
             </li>
         </TransitionGroup>
     </div>

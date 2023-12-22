@@ -5,7 +5,6 @@ from beanie import Document
 from langchain.prompts import ChatPromptTemplate
 from langchain.prompts.chat import SystemMessage, HumanMessagePromptTemplate, AIMessagePromptTemplate
 from ..config import settings
-import uuid
 
 
 class ChatRole(Enum):
@@ -19,7 +18,7 @@ class ChatMessage(BaseModel):
 
 
 class ChatSession(BaseModel):
-    session_id: str = str(uuid.uuid4())
+    session_id: str
     session_title: str = 'New Chat with AI'
     messages: List[ChatMessage] = []
 

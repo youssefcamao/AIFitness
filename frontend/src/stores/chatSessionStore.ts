@@ -7,6 +7,7 @@ const APIBASELINK = import.meta.env.VITE_CHAT_SESSION_API_BASE_URL
 let chatClient = new ChatClient(APIBASELINK)
 let client = new Client(APIBASELINK)
 
+
 export const useChatSessionApiStore = defineStore('chatSessionStore', {
     state: () => ({
         sessionsList: [] as IChatSession[],
@@ -15,19 +16,20 @@ export const useChatSessionApiStore = defineStore('chatSessionStore', {
         isMessageLoading: false,
     }),
     actions: {
-        async loadAllSession() {
-            await chatClient.get().then(result => this.sessionsList = result || Array<IChatSession>())
+        async loadAllSession(token: string) {
+            await chatClient.get(token).then(result => this.sessionsList = result || Array<IChatSession>())
                 .catch(_ => this.sessionsList = Array<IChatSession>())
+
         },
-        async SendMessageAndFetchResponse(newMessage: string) {
+        async SendMessageAndFetchResponse(newMessage: string, token: string) {
             let newMessageObj = new ChatMessage({role: 'user', content: newMessage})
             let newResponse = new ChatMessage({role: 'ai', content: ''})
-            if(this.currentSession?._id) {
+            if(this.currentSession?.session_id) {
                 this.currentSession.messages?.push(newMessageObj)
                 this.isMessageLoading = true;
                 let newResponse = new ChatMessage({role: 'ai', content: ''})
                 this.currentSession.messages?.push(newResponse)
-                await client.post(this.currentSession?._id, newMessage).then(response => newResponse.content = response.response)
+                await client.post(this.currentSession?.session_id, newMessage, token).then(response => newResponse.content = response.response)
                 this.isMessageLoading = false
             }
             else {
@@ -35,8 +37,8 @@ export const useChatSessionApiStore = defineStore('chatSessionStore', {
                 this.currentSession = session
                 this.isMessageLoading = true;
                 let newChat: CreateNewChat | null = null;
-                await chatClient.post(newMessage).then(response => newChat = response)
-                this.currentSession._id = newChat!.session_id
+                await chatClient.post(newMessage, token).then(response => newChat = response)
+                this.currentSession.session_id = newChat!.session_id
                 this.currentSession.session_title = newChat!.session_title
                 this.currentSession.messages![this.currentSession.messages!.length - 1].content = newChat!.response
                 this.sessionsList.push(session)
@@ -47,14 +49,14 @@ export const useChatSessionApiStore = defineStore('chatSessionStore', {
             if(!sessionId) {
                 this.currentSession = null
             }
-            let foundSession = this.sessionsList.find((a) => a._id == sessionId)
+            let foundSession = this.sessionsList.find((a) => a.session_id == sessionId)
             if(foundSession) {
                 this.currentSession = foundSession
             }
         },
-        async DeleteSession(session_id: string) {
-            await client.delete(session_id).then(response => response)
-            await this.loadAllSession()
+        async DeleteSession(session_id: string, token: string) {
+            await client.delete(session_id, token).then(response => response)
+            await this.loadAllSession(token)
         }
     }
 })

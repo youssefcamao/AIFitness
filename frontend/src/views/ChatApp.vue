@@ -3,13 +3,15 @@ import SidePanel from '../components/chat-app/SidePanel.vue';
 import ChatInterface from '../components/chat-app/ChatInterface.vue'
 import {useChatSessionApiStore} from '../stores/chatSessionStore'
 import {onMounted} from 'vue';
+import {useAuthStore} from '../stores/authStore'
 
 
-
+var authStore = useAuthStore()
 var sessionApiStore = useChatSessionApiStore()
 
 onMounted(async () => {
-    await sessionApiStore.loadAllSession()
+    let authToken = authStore.currentAccessToken
+    await sessionApiStore.loadAllSession(authToken)
     let session = sessionApiStore.currentSession
     console.log("this is the result:")
     console.log(session)

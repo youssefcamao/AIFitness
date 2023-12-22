@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import {ref, watch} from 'vue';
 import Logo from '../assets/logo.png'
+import {useAuthStore} from '../stores/authStore'
+import {useRouter} from 'vue-router';
 
 
+var authStore = useAuthStore()
+const router = useRouter();
 const emailLogin = ref('');
 const passwordLogin = ref('');
 const rememberMe = ref(false);
@@ -11,8 +15,13 @@ let runIndex = 0;
 const signupText = "Hey my name is Ai Fitness, Im your personal assistant, Tell me about yourself, can you provide me with your email and full name"
 const signupLiveMessage = ref("")
 const textArea = ref<HTMLAreaElement | null>(null)
+const signupInput = ref('')
+const securityQuestion = ref('')
+const securityAsnwer = ref('')
+
 
 const isLogin = ref(true)
+const isLoginStep1 = ref(true)
 const isSignupInputHidden = ref(true)
 
 const fillLiveMessage = () => {
@@ -33,9 +42,30 @@ watch(isLogin, () => {
         fillLiveMessage()
     }
 })
-const doLogin = () => {
-    // Your login logic here
-    alert('Login logic to be implemented.');
+const handleKeydown = async (event: KeyboardEvent) => {
+    let text = signupInput.value
+    if(event.key === 'Enter' && !event.shiftKey && text) {
+        event.preventDefault()
+        await authStore.signup(text)
+        if(authStore.currentAccessToken) {
+            router.push({name: 'chat'});
+        }
+    }
+}
+const doLoginStep1 = async () => {
+    if(emailLogin.value && passwordLogin.value) {
+        await authStore.loginStep1(emailLogin.value, passwordLogin.value)
+        securityQuestion.value = authStore.securityQuestion
+        isLoginStep1.value = false
+    }
+};
+const doLoginStep2 = async () => {
+    if(securityAsnwer.value) {
+        await authStore.loginStep2(securityAsnwer.value)
+        if(authStore.currentAccessToken) {
+            router.push({name: 'chat'});
+        }
+    }
 };
 </script>
 <template>
@@ -43,10 +73,10 @@ const doLogin = () => {
         <div class="login-neon left-neon"></div>
         <div class="login-neon right-neon"></div>
         <div class="login-container">
-            <div class="login-card" v-if="isLogin">
+            <div class="login-card" v-if="isLogin && isLoginStep1">
                 <h5>WELCOME BACK</h5>
                 <h2>Log In to your Account</h2>
-                <form @submit.prevent="doLogin">
+                <form @submit.prevent="doLoginStep1">
                     <div class="input-group">
                         <label for="email">Email</label>
                         <input type="email" id="email" v-model="emailLogin" placeholder="johnsondoe@nomail.com" required>
@@ -63,14 +93,31 @@ const doLogin = () => {
                     <p class="signup-text">New User? <a @click="isLogin = false">Sign up here</a></p>
                 </form>
             </div>
-            <div class="signup-container" v-else>
+            <div class="login-card" v-if="isLogin && !isLoginStep1">
+                <h5>Last Step</h5>
+                <h2>Security question</h2>
+                <form @submit.prevent="doLoginStep2">
+                    <div class="input-group">
+                        <label for="question">security question</label>
+                        <input type="question" id="question" v-model="securityQuestion" disabled>
+                    </div>
+                    <div class="input-group">
+                        <label for="answer">your answer</label>
+                        <input type="answer" id="answer" v-model="securityAsnwer">
+                    </div>
+                    <button type="submit" class="login-btn button">Login</button>
+                    <p class="signup-text">New User? <a @click="isLogin = false">Sign up here</a></p>
+                </form>
+            </div>
+            <div class="signup-container" v-if="!isLogin">
                 <h2>Signup</h2>
                 <div class="ai-signup-message">
                     <img :src="Logo">
                     <p>{{ signupLiveMessage }}</p>
                 </div>
-                <textarea name="signupText" id="signupText" cols="30" rows="7" placeholder="Write about yourself ..."
-                    :class="{'hide': isSignupInputHidden}" ref="textArea"></textarea>
+                <textarea name="signupText" id="signupText" cols="30" rows="7" v-model="signupInput"
+                    placeholder="Write about yourself ..." :class="{'hide': isSignupInputHidden}" ref="textArea"
+                    @keydown="handleKeydown"></textarea>
                 <p class="signup-text">Already have an account? <a @click="isLogin = true">LOGIN HERE</a></p>
             </div>
         </div>

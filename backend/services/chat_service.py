@@ -10,6 +10,7 @@ from ..models.chat_session import ChatSession
 from beanie import PydanticObjectId
 from typing import List, Dict
 import asyncio
+import uuid
 
 
 class ChatService:
@@ -36,7 +37,7 @@ class ChatService:
         return session.get_latest_response()
 
     async def create_new_session(self, initial_message: str) -> ChatSession:
-        session = ChatSession()
+        session = ChatSession(session_id=str(uuid.uuid4()))
         await asyncio.gather(
             self.run_chat(session, initial_message),
             self.__setup_title(session, initial_message)

@@ -3,6 +3,7 @@ import LandingPage from '../views/LandingPage.vue'
 import ChatApp from '../views/ChatApp.vue'
 import NotFound from '../views/NotFound.vue'
 import Login from '../views/Login.vue'
+import {useAuthStore} from '../stores/authStore'
 
 
 const router = createRouter({
@@ -16,6 +17,7 @@ const router = createRouter({
             path: '/chat',
             name: 'chat',
             component: ChatApp,
+            meta: {requiresAuth: true},
             children: [
                 {
                     path: ':sessionId',
@@ -42,4 +44,14 @@ const router = createRouter({
     ]
 }
 )
+router.beforeEach((to, from, next) => {
+    if(to.matched.some((r) => r.meta?.requiresAuth)) {
+        const store = useAuthStore()
+        if(!store.currentAccessToken) {
+            next({name: 'login', query: {redirect: to.fullPath}})
+            return
+        }
+    }
+    next()
+})
 export default router
