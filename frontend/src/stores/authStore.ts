@@ -33,6 +33,7 @@ export const useAuthStore = defineStore('authStore', {
             this.userFullName = '';
         },
         async signup(signupText: string) {
+            this.signupError = ''
             await signupClient.post(new UserCreate({text: signupText})).then(response => {
                 this.saveAuthData(response.token.access_token, response.full_name)
             }).catch(error => {
@@ -45,6 +46,7 @@ export const useAuthStore = defineStore('authStore', {
             })
         },
         async loginStep1(email: string, pass: string) {
+            this.loginError = ''
             await step1Client.post(new Body_login_step1_token_step1_post({
                 username: email, password: pass,
                 grant_type: '', client_id: '', client_secret: '', scope: ''
@@ -62,6 +64,7 @@ export const useAuthStore = defineStore('authStore', {
                 })
         },
         async loginStep2(response: string) {
+            this.loginError = ''
             await step2Client.post(new SecurityQuestionAnswer({intermediate_token: step1Token, answer: response}))
                 .then(response => {
                     this.saveAuthData(response.token.access_token, response.full_name)

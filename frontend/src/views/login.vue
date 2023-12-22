@@ -121,12 +121,12 @@ const resizeTextarea = () => {
         <div class="login-neon left-neon" :class="{
             'standard-neon': !isLoginStep1Error && !isLoginStep2Error && !isSignupError && !isLoading,
             'error-neon': isLoginStep1Error || isLoginStep2Error || isSignupError && !isLoading,
-            'loading-neon': !isLoginStep1Error && !isLoginStep2Error && !isSignupError && isLoading
+            'loading-neon': isLoading
         }"></div>
         <div class="login-neon right-neon" :class="{
             'standard-neon': !isLoginStep1Error && !isLoginStep2Error && !isSignupError && !isLoading,
             'error-neon': isLoginStep1Error || isLoginStep2Error || isSignupError && !isLoading,
-            'loading-neon': !isLoginStep1Error && !isLoginStep2Error && !isSignupError && isLoading
+            'loading-neon': isLoading
         }"></div>
         <div class="login-container">
             <div class="login-card" v-if="isLogin && isLoginStep1">
