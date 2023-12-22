@@ -12,7 +12,7 @@ const passwordLogin = ref('');
 const rememberMe = ref(false);
 
 let runIndex = 0;
-const signupText = "Hey my name is Ai Fitness, Im your personal assistant, Tell me about yourself, can you provide me with your email and full name"
+const signupText = "Hey, I'm Ai Fitness, your assistant. Please share your full name, email, password and a memorable secret for creating a secure question so i can sign you up!."
 const signupLiveMessage = ref("")
 const textArea = ref<HTMLAreaElement | null>(null)
 const signupInput = ref('')
