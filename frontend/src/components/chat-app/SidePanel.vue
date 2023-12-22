@@ -1,15 +1,25 @@
 <script setup lang="ts">
 import {useChatSessionApiStore} from '../../stores/chatSessionStore';
 import {useRouter} from 'vue-router';
-import {ref, Ref} from 'vue';
+import {ref, Ref, computed} from 'vue';
 import Remove from '../../assets/remove.png'
+import {useAuthStore} from '../../stores/authStore'
+import Logout from '../../assets/logout.png'
 
-const sessionApiStore = useChatSessionApiStore()
-const router = useRouter()
+
+var authStore = useAuthStore()
+const sessionApiStore = useChatSessionApiStore();
+const router = useRouter();
 const historyList: Ref<HTMLUListElement | null> = ref(null)
 const hoverIndex = ref(-1)
-let liLoadedCount = 0
+let liLoadedCount = 0;
 
+const formattedFullName = computed(() => {
+    return authStore.userFullName
+        .split(' ')
+        .map(name => name.charAt(0).toUpperCase() + name.slice(1).toLowerCase())
+        .join(' ');
+});
 
 const onEnter = (el: Element) => {
     liLoadedCount++
@@ -34,34 +44,46 @@ const startNewChat = () => {
 const deleteChat = async (session_id: string | undefined) => {
     console.log(session_id)
     if(session_id) {
-        await sessionApiStore.deleteSession(session_id)
+        let authToken = authStore.currentAccessToken
+        await sessionApiStore.deleteSession(session_id, authToken)
         router.push({name: 'chat'});
     }
+}
+const ClickLogout = async () => {
+    authStore.signout()
+    router.push({name: 'login'});
 }
 </script>
 
 <template>
     <div class="sidepanel">
         <div class="user">
-            <img class="mask-group" src="../../assets/test_image.png" />
-            <h4>Yossi Molcho</h4>
-            <div class="user-sub">Pro</div>
+            <div class="mask-group">{{ formattedFullName[0] }}</div>
+            <h4>{{ formattedFullName }}</h4>
+            <img :src="Logout" @click="ClickLogout">
         </div>
         <button class="newChat-button" @click="startNewChat"><span>+</span>New chat</button>
+        <div class="loading list-loading" v-if="sessionApiStore.sessionsList.length == 0">Loading&#8230;
+        </div>
         <TransitionGroup name="list" tag="ul" class="chat-history" @enter="onEnter" :ref="historyList">
             <li @mouseover="hoverIndex = index" @mouseleave="hoverIndex = -1"
                 v-for="session, index in sessionApiStore.sessionsList" :key="index" class="chat-titel"
-                :class="{'selected-session': sessionApiStore.currentSession && sessionApiStore.currentSession?._id == session._id}"
-                @click="() => navigateToSession(session._id)">
+                :class="{'selected-session': sessionApiStore.currentSession && sessionApiStore.currentSession?.session_id == session.session_id}"
+                @click="() => navigateToSession(session.session_id)">
                 <div class="titel-text">{{ session.session_title }}</div>
                 <button v-show="hoverIndex == index" class="remove-button"><img :src="Remove" alt="RM"
-                        @click="() => deleteChat(session._id)"></button>
+                        @click="() => deleteChat(session.session_id)"></button>
             </li>
         </TransitionGroup>
     </div>
 </template>
 
 <style scoped lang="scss">
+.list-loading {
+    margin-top: 40px;
+    opacity: 0.5;
+}
+
 .remove-button {
     background: none;
     width: fit-content;
@@ -168,25 +190,29 @@ const deleteChat = async (session_id: string | undefined) => {
     border-bottom: 2px solid rgba(221, 221, 221, .08);
     margin-bottom: 12px;
 
-    img {
+    .mask-group {
         width: 32px;
         height: 32px;
         border-radius: 50%;
         margin-right: 10px;
+        background-color: #262626;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
     }
 
     h4 {
         margin-right: auto;
     }
 
-    .user-sub {
+    img {
         display: flex;
         justify-content: center;
         align-items: center;
-        background-color: #F6E6A6;
-        color: #8D7324;
-        border-radius: 4px;
-        padding: 2px 8px;
+        width: 23px;
+        height: 23px;
+        cursor: pointer;
     }
 }
 

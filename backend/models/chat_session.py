@@ -17,7 +17,8 @@ class ChatMessage(BaseModel):
     content: str
 
 
-class ChatSession(Document):
+class ChatSession(BaseModel):
+    session_id: str
     session_title: str = 'New Chat with AI'
     messages: List[ChatMessage] = []
 
@@ -42,3 +43,16 @@ class ChatSession(Document):
 
     class Config:
         populate_by_name = True
+
+
+class UserSecurityQuestion(BaseModel):
+    question: str
+    response: str
+
+
+class User(Document):
+    full_name: str
+    email: str
+    hashed_password: str
+    session_list: List[ChatSession] = []
+    security_question: UserSecurityQuestion

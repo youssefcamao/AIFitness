@@ -2,25 +2,31 @@
 import Logo from '../../assets/logo.png'
 import {onMounted, onUnmounted, ref} from 'vue';
 import {useRouter} from 'vue-router'
+import {useAuthStore} from '../../stores/authStore';
 
+const authStore = useAuthStore();
 const router = useRouter()
 
-const handleChat = () : void => {
-    router.push('/chat')
+const handleChat = (): void => {
+    if(authStore.currentAccessToken) {
+        router.push({name: 'chat'});
+    } else {
+        router.push({name: 'login'});
+    }
 }
 
 const navbar = ref<HTMLDivElement | null>(null)
 const isSticky = ref(false)
 const isButtonWhite = ref(false)
 
-const scrollToSection = (sectionId: string) : void => {
+const scrollToSection = (sectionId: string): void => {
     const element = document.getElementById(sectionId)
     if(element) {
         element.scrollIntoView({behavior: 'smooth'})
     }
 }
 
-const handleScroll = () : void => {
+const handleScroll = (): void => {
     if(navbar.value) {
         if(window.scrollY > navbar.value.offsetTop + 80) {
             if(window.scrollY > navbar.value.offsetTop + 630) {
