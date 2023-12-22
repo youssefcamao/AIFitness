@@ -10,8 +10,8 @@ let step1Token = ''
 
 export const useAuthStore = defineStore('authStore', {
     state: () => ({
-        currentAccessToken: '',
-        userFullName: '',
+        currentAccessToken: localStorage.getItem('currentAccessToken') || '',
+        userFullName: localStorage.getItem('userFullName') || '',
         signupErrorMessage: '',
         loginSignupMessage: '',
         securityQuestion: '',
@@ -19,10 +19,22 @@ export const useAuthStore = defineStore('authStore', {
         loginError: ''
     }),
     actions: {
+        saveAuthData(token: string, fullName: string) {
+            this.currentAccessToken = token;
+            this.userFullName = fullName;
+            localStorage.setItem('currentAccessToken', token);
+            localStorage.setItem('userFullName', fullName);
+        },
+        signout() {
+            localStorage.removeItem('currentAccessToken');
+            localStorage.removeItem('userFullName');
+
+            this.currentAccessToken = '';
+            this.userFullName = '';
+        },
         async signup(signupText: string) {
             await signupClient.post(new UserCreate({text: signupText})).then(response => {
-                this.currentAccessToken = response.token.access_token
-                this.userFullName = response.full_name
+                this.saveAuthData(response.token.access_token, response.full_name)
             }).catch(error => {
                 if(error instanceof ApiException && error.status === 400) {
                     const errorDetails = JSON.parse(error.response);
@@ -52,8 +64,7 @@ export const useAuthStore = defineStore('authStore', {
         async loginStep2(response: string) {
             await step2Client.post(new SecurityQuestionAnswer({intermediate_token: step1Token, answer: response}))
                 .then(response => {
-                    this.currentAccessToken = response.token.access_token
-                    this.userFullName = response.full_name
+                    this.saveAuthData(response.token.access_token, response.full_name)
                 }).catch(error => {
                     if(error instanceof ApiException && error.status === 401) {
                         const errorDetails = JSON.parse(error.response);

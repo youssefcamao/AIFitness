@@ -48,7 +48,7 @@ const delteChat = async (session_id: string | undefined) => {
     }
 }
 const ClickLogout = async () => {
-    authStore.currentAccessToken = ''
+    authStore.signout()
     router.push({name: 'login'});
 }
 </script>
