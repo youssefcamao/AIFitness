@@ -25,7 +25,7 @@ class SecurityQuestionValidator:
         )
         optional_params = {"response_format": {"type": "json_object"}}
         self.chat_model = ChatOpenAI(
-            model_name="gpt-3.5-turbo-0301", model_kwargs=optional_params)
+            model_name="gpt-4-1106-preview", model_kwargs=optional_params)
 
     async def validate_security_question(self, security_question_obj: UserSecurityQuestion, user_response: str) -> bool:
         model_ouput = await self.chat_model.ainvoke(

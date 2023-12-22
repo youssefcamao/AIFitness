@@ -37,7 +37,8 @@ async def login_for_access_token(answer_data: SecurityQuestionAnswer, user_servi
     email = user_service.validate_intermediate_token(
         answer_data.intermediate_token)
     user = await user_service.get_user_by_email(email)
-    if not user or not security_question_validator.validate_security_question(user.security_question, answer_data.answer):
+    isAnswerValid = await security_question_validator.validate_security_question(user.security_question, answer_data.answer)
+    if not user or not isAnswerValid.isResponseValid:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect security answer",

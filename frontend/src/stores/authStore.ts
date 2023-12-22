@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia'
-import {Step1Client, Step2Client, SignupClient, UserCreate, Body_login_step1_token_step1_post, SecurityQuestionAnswer} from "../apis/ChatSessionApi";
+import {Step1Client, Step2Client, SignupClient, UserCreate, Body_login_step1_token_step1_post, SecurityQuestionAnswer, ApiException} from "../apis/ChatSessionApi";
 
 
 const APIBASELINK = import.meta.env.VITE_CHAT_SESSION_API_BASE_URL
@@ -15,13 +15,22 @@ export const useAuthStore = defineStore('authStore', {
         signupErrorMessage: '',
         loginSignupMessage: '',
         securityQuestion: '',
+        signupError: '',
+        loginError: ''
     }),
     actions: {
         async signup(signupText: string) {
             await signupClient.post(new UserCreate({text: signupText})).then(response => {
                 this.currentAccessToken = response.token.access_token
                 this.userFullName = response.full_name
-            }).catch(error => error)
+            }).catch(error => {
+                if(error instanceof ApiException && error.status === 400) {
+                    const errorDetails = JSON.parse(error.response);
+                    this.signupError = errorDetails.detail;
+                } else {
+                    this.signupError = "An unexpected error occurred";
+                }
+            })
         },
         async loginStep1(email: string, pass: string) {
             await step1Client.post(new Body_login_step1_token_step1_post({
@@ -31,15 +40,31 @@ export const useAuthStore = defineStore('authStore', {
                 .then(response => {
                     this.securityQuestion = response.security_question
                     step1Token = response.intermediate_token
-                }).catch(error => error)
+                }).catch(error => {
+                    if(error instanceof ApiException && error.status === 401) {
+                        const errorDetails = JSON.parse(error.response);
+                        this.loginError = errorDetails.detail;
+                    } else {
+                        this.loginError = "An unexpected error occurred";
+                    }
+                })
         },
         async loginStep2(response: string) {
             await step2Client.post(new SecurityQuestionAnswer({intermediate_token: step1Token, answer: response}))
                 .then(response => {
                     this.currentAccessToken = response.token.access_token
                     this.userFullName = response.full_name
-                }).catch(error => error)
-            step1Token = ''
+                }).catch(error => {
+                    if(error instanceof ApiException && error.status === 401) {
+                        const errorDetails = JSON.parse(error.response);
+                        this.loginError = errorDetails.detail;
+                    } else {
+                        this.loginError = "An unexpected error occurred";
+                    }
+                })
+            if(!this.loginError) {
+                step1Token = ''
+            }
         }
     }
 })

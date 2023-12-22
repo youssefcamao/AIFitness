@@ -23,6 +23,9 @@ const securityAsnwer = ref('')
 const isLogin = ref(true)
 const isLoginStep1 = ref(true)
 const isSignupInputHidden = ref(true)
+const isSignupError = ref(false)
+const isLoginStep1Error = ref(false)
+const isLoginStep2Error = ref(false)
 
 const fillLiveMessage = () => {
     if(runIndex < signupText.length) {
@@ -47,21 +50,37 @@ const handleKeydown = async (event: KeyboardEvent) => {
     if(event.key === 'Enter' && !event.shiftKey && text) {
         event.preventDefault()
         await authStore.signup(text)
+        if(authStore.signupError) {
+            isSignupError.value = true
+            return
+        }
         if(authStore.currentAccessToken) {
             router.push({name: 'chat'});
         }
     }
 }
 const doLoginStep1 = async () => {
+    isLoginStep1Error.value = false
+    authStore.loginError = ''
     if(emailLogin.value && passwordLogin.value) {
         await authStore.loginStep1(emailLogin.value, passwordLogin.value)
+        if(authStore.loginError) {
+            isLoginStep1Error.value = true
+            return
+        }
         securityQuestion.value = authStore.securityQuestion
         isLoginStep1.value = false
     }
 };
 const doLoginStep2 = async () => {
+    isLoginStep2Error.value = false
+    authStore.loginError = ''
     if(securityAsnwer.value) {
         await authStore.loginStep2(securityAsnwer.value)
+        if(authStore.loginError) {
+            isLoginStep2Error.value = true
+            return
+        }
         if(authStore.currentAccessToken) {
             router.push({name: 'chat'});
         }
@@ -79,21 +98,24 @@ const doLoginStep2 = async () => {
                 <form @submit.prevent="doLoginStep1">
                     <div class="input-group">
                         <label for="email">Email</label>
-                        <input type="email" id="email" v-model="emailLogin" placeholder="johnsondoe@nomail.com" required>
+                        <input type="email" id="email" v-model="emailLogin" :class="{'error-input': isLoginStep1Error}"
+                            placeholder="johnsondoe@nomail.com" required>
                     </div>
                     <div class="input-group">
                         <label for="password">Password</label>
-                        <input type="password" id="password" v-model="passwordLogin" placeholder="************" required>
+                        <input type="password" id="password" v-model="passwordLogin"
+                            :class="{'error-input': isLoginStep1Error}" placeholder="************" required>
                     </div>
                     <div class="checkbox-group">
                         <input type="checkbox" id="remember" v-model="rememberMe">
                         <label for="remember">Remember me</label>
                     </div>
                     <button type="submit" class="login-btn button">Continue</button>
+                    <p class="error-text" v-if="isLoginStep1Error">{{ authStore.loginError }}</p>
                     <p class="signup-text">New User? <a @click="isLogin = false">Sign up here</a></p>
                 </form>
             </div>
-            <div class="login-card" v-if="isLogin && !isLoginStep1">
+            <div class="login-card" v-if="isLogin && !isLoginStep1 && !isLoginStep1Error">
                 <h5>Last Step</h5>
                 <h2>Security question</h2>
                 <form @submit.prevent="doLoginStep2">
@@ -103,9 +125,11 @@ const doLoginStep2 = async () => {
                     </div>
                     <div class="input-group">
                         <label for="answer">your answer</label>
-                        <input type="answer" id="answer" v-model="securityAsnwer">
+                        <input type="answer" id="answer" v-model="securityAsnwer"
+                            :class="{'error-input': isLoginStep2Error}">
                     </div>
                     <button type="submit" class="login-btn button">Login</button>
+                    <p class="error-text" v-if="isLoginStep2Error">{{ authStore.loginError }}</p>
                     <p class="signup-text">New User? <a @click="isLogin = false">Sign up here</a></p>
                 </form>
             </div>
@@ -118,6 +142,7 @@ const doLoginStep2 = async () => {
                 <textarea name="signupText" id="signupText" cols="30" rows="7" v-model="signupInput"
                     placeholder="Write about yourself ..." :class="{'hide': isSignupInputHidden}" ref="textArea"
                     @keydown="handleKeydown"></textarea>
+                <p class="error-text" v-if="isSignupError">{{ authStore.signupError }}</p>
                 <p class="signup-text">Already have an account? <a @click="isLogin = true">LOGIN HERE</a></p>
             </div>
         </div>
@@ -134,6 +159,10 @@ const doLoginStep2 = async () => {
     h2 {
         margin-bottom: 50px;
     }
+}
+
+.error-input {
+    border-color: #d11414;
 }
 
 .hide {
@@ -297,6 +326,13 @@ label {
 .signup-text {
     text-align: center;
     color: #aaa;
+    margin-top: 1rem;
+    font-size: 13px;
+}
+
+.error-text {
+    text-align: center;
+    color: #d11414;
     margin-top: 1rem;
     font-size: 13px;
 }
