@@ -71,8 +71,10 @@ const doLoginStep1 = async () => {
     authStore.loginError = ''
     if(emailLogin.value && passwordLogin.value) {
         step1Button.value!.disabled = true
+        isLoading.value = true
         await authStore.loginStep1(emailLogin.value, passwordLogin.value)
         step1Button.value!.disabled = false
+        isLoading.value = false
         if(authStore.loginError) {
             isLoginStep1Error.value = true
             return
@@ -89,8 +91,10 @@ const doLoginStep2 = async () => {
     authStore.loginError = ''
     if(securityAsnwer.value) {
         step2Button.value!.disabled = true
+        isLoading.value = true
         await authStore.loginStep2(securityAsnwer.value)
         step2Button.value!.disabled = false
+        isLoading.value = false
         if(authStore.loginError) {
             isLoginStep2Error.value = true
             return
@@ -288,8 +292,8 @@ const resizeTextarea = () => {
 
 .login-neon {
     position: absolute;
-    width: 80vw;
-    height: 80vh;
+    width: 70vw;
+    height: 70vh;
     filter: blur(24vh);
     opacity: 0.6;
     border-radius: 100%;
