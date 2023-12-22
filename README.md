@@ -42,11 +42,11 @@ To use it, go to the `/docker-compose.yaml` file and insert it at `OPEN_API_KEY:
 
 3. Go to `Sign up here`
 
-<img src="screenshots/signup_button.png" alt="signup">
+<img src="screenshots/signup_button.png" alt="signup" width="100px">
 
 4. Type in the request data: `name, email, security question and answer`
 Use any kind of dummy data, there is no actual email verification process.
 
-<img src="screenshots/singup_mask.png" alt="signup mask">
+<img src="screenshots/singup_mask.png" alt="signup mask" width="100px">
 
 5. You should be logged in now. If you want to log out and back in again, you need your email, password and the answer to your security question.
