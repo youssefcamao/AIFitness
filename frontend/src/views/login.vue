@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref, watch} from 'vue';
+import {ref, watch, nextTick} from 'vue';
 import Logo from '../assets/logo.png'
 import {useAuthStore} from '../stores/authStore'
 import {useRouter} from 'vue-router';
@@ -19,6 +19,9 @@ const signupInput = ref('')
 const securityQuestion = ref('')
 const securityAsnwer = ref('')
 const isLoading = ref(false)
+const step1Button = ref<HTMLButtonElement | null>(null)
+const step2Button = ref<HTMLButtonElement | null>(null)
+
 
 
 const isLogin = ref(true)
@@ -27,6 +30,7 @@ const isSignupInputHidden = ref(true)
 const isSignupError = ref(false)
 const isLoginStep1Error = ref(false)
 const isLoginStep2Error = ref(false)
+const questionTextarea = ref<HTMLAreaElement | null>(null);
 
 const fillLiveMessage = () => {
     if(runIndex < signupText.length) {
@@ -66,20 +70,27 @@ const doLoginStep1 = async () => {
     isLoginStep1Error.value = false
     authStore.loginError = ''
     if(emailLogin.value && passwordLogin.value) {
+        step1Button.value!.disabled = true
         await authStore.loginStep1(emailLogin.value, passwordLogin.value)
+        step1Button.value!.disabled = false
         if(authStore.loginError) {
             isLoginStep1Error.value = true
             return
         }
         securityQuestion.value = authStore.securityQuestion
         isLoginStep1.value = false
+        nextTick(() => {
+            resizeTextarea();
+        });
     }
 };
 const doLoginStep2 = async () => {
     isLoginStep2Error.value = false
     authStore.loginError = ''
     if(securityAsnwer.value) {
+        step2Button.value!.disabled = true
         await authStore.loginStep2(securityAsnwer.value)
+        step2Button.value!.disabled = false
         if(authStore.loginError) {
             isLoginStep2Error.value = true
             return
@@ -96,6 +107,14 @@ const switchWindow = () => {
     isLoginStep2Error.value = false
     isSignupError.value = false
 }
+
+const resizeTextarea = () => {
+    const textarea = questionTextarea.value;
+    if(textarea) {
+        textarea.style.height = 'auto';
+        textarea.style.height = textarea.scrollHeight + 'px';
+    }
+};
 </script>
 <template>
     <div class="main-view">
@@ -128,7 +147,7 @@ const switchWindow = () => {
                         <input type="checkbox" id="remember" v-model="rememberMe">
                         <label for="remember">Remember me</label>
                     </div>
-                    <button type="submit" class="login-btn button">Continue</button>
+                    <button type="submit" ref="step1Button" class="login-btn button">Continue</button>
                     <p class="error-text" v-if="isLoginStep1Error">{{ authStore.loginError }}</p>
                     <p class="signup-text">New User? <a @click="switchWindow">Sign up here</a></p>
                 </form>
@@ -139,14 +158,15 @@ const switchWindow = () => {
                 <form @submit.prevent="doLoginStep2">
                     <div class="input-group">
                         <label for="question">security question</label>
-                        <input type="question" id="question" v-model="securityQuestion" disabled>
+                        <textarea id="question" v-model="securityQuestion" disabled rows="1" class="autoresize-textarea"
+                            ref="questionTextarea"></textarea>
                     </div>
                     <div class="input-group">
                         <label for="answer">your answer</label>
                         <input type="answer" id="answer" v-model="securityAsnwer"
                             :class="{'error-input': isLoginStep2Error}">
                     </div>
-                    <button type="submit" class="login-btn button">Login</button>
+                    <button type="submit" ref="step2Button" class="login-btn button">Login</button>
                     <p class="error-text" v-if="isLoginStep2Error">{{ authStore.loginError }}</p>
                     <p class="signup-text">New User? <a @click="isLogin = false">Sign up here</a></p>
                 </form>
@@ -167,6 +187,24 @@ const switchWindow = () => {
     </div>
 </template>
 <style scoped lang="scss">
+#answer {
+    margin-bottom: 10px;
+}
+
+.autoresize-textarea {
+    width: 100%;
+    padding: 10px;
+    background-color: rgba(221, 221, 221, .08);
+    border: 1px solid rgba(221, 221, 221, .08);
+    font-size: 16px;
+    resize: none;
+    overflow: hidden;
+    border-radius: 5px;
+    color: #ddd;
+    font-family: inherit;
+    font-size: 14px;
+}
+
 .signup-container {
     display: flex;
     flex-direction: column;
