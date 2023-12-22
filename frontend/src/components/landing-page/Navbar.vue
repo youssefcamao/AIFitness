@@ -2,11 +2,17 @@
 import Logo from '../../assets/logo.png'
 import {onMounted, onUnmounted, ref} from 'vue';
 import {useRouter} from 'vue-router'
+import {useAuthStore} from '../../stores/authStore';
 
+const authStore = useAuthStore();
 const router = useRouter()
 
 const handleChat = (): void => {
-    router.push('/login')
+    if(authStore.currentAccessToken) {
+        router.push({name: 'chat'});
+    } else {
+        router.push({name: 'login'});
+    }
 }
 
 const navbar = ref<HTMLDivElement | null>(null)

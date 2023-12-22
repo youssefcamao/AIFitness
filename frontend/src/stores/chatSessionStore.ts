@@ -10,15 +10,21 @@ let client = new Client(APIBASELINK)
 
 export const useChatSessionApiStore = defineStore('chatSessionStore', {
     state: () => ({
-        sessionsList: [] as IChatSession[],
+        sessionsList: JSON.parse(localStorage.getItem('sessionsList') || '[]') as IChatSession[],
         currentSession: null as IChatSession | null,
         searchInput: "",
         isMessageLoading: false,
     }),
     actions: {
         async loadAllSession(token: string) {
-            await chatClient.get(token).then(result => this.sessionsList = result || Array<IChatSession>())
-                .catch(_ => this.sessionsList = Array<IChatSession>())
+            try {
+                const result = await chatClient.get(token);
+                this.sessionsList = result || [];
+                localStorage.setItem('sessionsList', JSON.stringify(this.sessionsList));
+            } catch(error) {
+                console.error("Failed to load sessions:", error);
+                this.sessionsList = [];
+            }
 
         },
         async SendMessageAndFetchResponse(newMessage: string, token: string) {
@@ -31,6 +37,7 @@ export const useChatSessionApiStore = defineStore('chatSessionStore', {
                 this.currentSession.messages?.push(newResponse)
                 await client.post(this.currentSession?.session_id, newMessage, token).then(response => newResponse.content = response.response)
                 this.isMessageLoading = false
+                this.updateSessionsCache();
             }
             else {
                 let session: IChatSession = new ChatSession({messages: [newMessageObj, newResponse]})
@@ -42,6 +49,7 @@ export const useChatSessionApiStore = defineStore('chatSessionStore', {
                 this.currentSession.session_title = newChat!.session_title
                 this.currentSession.messages![this.currentSession.messages!.length - 1].content = newChat!.response
                 this.sessionsList.push(session)
+                this.updateSessionsCache();
                 this.isMessageLoading = false
             }
         },
@@ -57,6 +65,9 @@ export const useChatSessionApiStore = defineStore('chatSessionStore', {
         async DeleteSession(session_id: string, token: string) {
             await client.delete(session_id, token).then(response => response)
             await this.loadAllSession(token)
-        }
+        },
+        updateSessionsCache() {
+            localStorage.setItem('sessionsList', JSON.stringify(this.sessionsList));
+        },
     }
 })
