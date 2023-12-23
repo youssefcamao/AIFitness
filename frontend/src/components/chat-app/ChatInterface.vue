@@ -50,6 +50,7 @@ const sendMessage = async (suggestedMessage: string | undefined = undefined) => 
         let authToken = authStore.currentAccessToken
         await sessionApiStore.sendMessageAndFetchResponse(input, authToken)
         textareaRef.value!.disabled = false
+        textareaRef.value!.focus()
     }
 }
 
