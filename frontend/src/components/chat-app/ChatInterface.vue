@@ -24,18 +24,21 @@ onBeforeRouteUpdate(async (to, from) => {
     }
 })
 
+const adjustTextAreaDefault = () => {
+    if(textareaRef.value) {
+        textareaRef.value.style.height = 'auto'
+        textareaRef.value.style.height = '36px'
+    }
+}
+
 const handleInput = (event: Event) => {
     const target = event.target as HTMLTextAreaElement;
     target.style.height = 'auto'
     target.style.height = `${Math.min(target.scrollHeight, 120)}px`
-
-    const parent = textareaRef.value?.parentNode as HTMLElement | null;
-    if(parent) {
-        parent.dataset.replicatedValue = target.value;
-    }
 }
 
 const sendMessage = async (suggestedMessage: string | undefined = undefined) => {
+    textareaRef.value!.disabled = true
     let textAreaInput = messageText.value.trim();
     if(suggestedMessage || textAreaInput) {
         let input = '';
@@ -46,6 +49,7 @@ const sendMessage = async (suggestedMessage: string | undefined = undefined) => 
         }
         let authToken = authStore.currentAccessToken
         await sessionApiStore.sendMessageAndFetchResponse(input, authToken)
+        textareaRef.value!.disabled = false
     }
 }
 
@@ -54,12 +58,14 @@ const handleKeydown = (event: KeyboardEvent) => {
         event.preventDefault()
         sendMessage()
         messageText.value = ''
+        adjustTextAreaDefault()
     }
 }
 
 const handleSendButton = () => {
     sendMessage()
     messageText.value = ''
+    adjustTextAreaDefault()
 }
 
 const handleSuggestions = (event: MouseEvent) => {
@@ -128,7 +134,7 @@ watch(
                     <div class="chat-input">
                         <div class="grow-wrapper">
                             <textarea class="input-field" v-model="messageText" placeholder="Send a message" type="text"
-                                rows="1" :onInput="handleInput" @keydown="handleKeydown" />
+                                rows="1" :onInput="handleInput" @keydown="handleKeydown" ref="textareaRef" />
                         </div>
                     </div>
                     <button class="send-button" :disabled="!messageText.trim()" @click="handleSendButton">
