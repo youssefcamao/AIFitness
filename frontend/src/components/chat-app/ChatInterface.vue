@@ -261,7 +261,7 @@ textarea::-webkit-scrollbar-thumb {
     align-items: center;
     background: transparent;
     flex: 1;
-    padding: 0.5rem 0;
+    padding: 0.3rem 0;
 
     .grow-wrapper {
         width: 100%;
@@ -415,6 +415,7 @@ textarea::-webkit-scrollbar-thumb {
         border-radius: 7px;
         color: white;
         font-size: 16px;
+        overflow-wrap: anywhere;
 
         &.user-message_text {
             background-color: rgba($color: black, $alpha: 0.3);
