@@ -42,11 +42,11 @@ const startNewChat = () => {
     }
 };
 const deleteChat = async (session_id: string | undefined) => {
+    router.push({name: 'chat'});
     console.log(session_id)
     if(session_id) {
         let authToken = authStore.currentAccessToken
         await sessionApiStore.deleteSession(session_id, authToken)
-        router.push({name: 'chat'});
     }
 }
 const ClickLogout = async () => {

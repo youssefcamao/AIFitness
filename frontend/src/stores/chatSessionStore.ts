@@ -64,10 +64,9 @@ export const useChatSessionApiStore = defineStore('chatSessionStore', {
             }
         },
         async deleteSession(session_id: string, token: string) {
+            this.setCurrentSession(undefined)
             const previousSessionsList = [...this.sessionsList]; // Make a copy of the current state
             this.sessionsList = this.sessionsList.filter(session => session.session_id !== session_id);
-
-
             try {
                 await client.delete(session_id, token);
             } catch(error) {
