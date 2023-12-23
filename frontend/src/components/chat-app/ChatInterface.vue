@@ -93,7 +93,7 @@ const handleSuggestions = (event: MouseEvent) => {
                         'AI' : authStore.userFullName[0].toUpperCase() }}</div>
                     <div class="message-bubble" :class="{
                         'message': true, 'user-message_text': message.role === 'user', 'ai-message_text': message.role === 'ai',
-                        'ai-message-loading': sessionApiStore.isMessageLoading && message.content == '', 'ai-message-done': !sessionApiStore.isMessageLoading && message.content != ''
+                        'ai-message-loading': index == sessionApiStore.currentSession!.messages!.length - 1 && message.content == '', 'ai-message-done': message.content != ''
                     }">
                         <div class="loading" v-if="sessionApiStore.isMessageLoading && message.content == ''">Loading&#8230;
                         </div>
