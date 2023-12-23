@@ -69,7 +69,7 @@ const ClickLogout = async () => {
             <li @mouseover="hoverIndex = index" @mouseleave="hoverIndex = -1"
                 v-for="session, index in sessionApiStore.sessionsList" :key="index" class="chat-titel"
                 :class="{'selected-session': sessionApiStore.currentSession && sessionApiStore.currentSession?.session_id == session.session_id}"
-                @click="() => navigateToSession(session.session_id)">
+                :title="sessionApiStore.currentSession?.session_title" @click="() => navigateToSession(session.session_id)">
                 <div class="titel-text">{{ session.session_title }}</div>
                 <button v-show="hoverIndex == index" class="remove-button"><img :src="Remove" alt="RM"
                         @click="() => deleteChat(session.session_id)"></button>
@@ -132,11 +132,12 @@ const ClickLogout = async () => {
     font-size: 15px;
     padding: 12px 8px 12px 8px;
     border-radius: 8px;
+    width: 200px;
     cursor: pointer;
 
     img {
-        width: 20.5px;
-        height: 20.5px;
+        width: 20px;
+        height: 20px;
     }
 
     .titel-text {
