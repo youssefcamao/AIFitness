@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref} from 'vue';
+import {ref, watch, nextTick} from 'vue';
 import {onBeforeRouteUpdate} from 'vue-router';
 import SendIcon from '../../assets/send.png'
 import {useChatSessionApiStore} from '../../stores/chatSessionStore';
@@ -46,9 +46,6 @@ const sendMessage = async (suggestedMessage: string | undefined = undefined) => 
         }
         let authToken = authStore.currentAccessToken
         await sessionApiStore.sendMessageAndFetchResponse(input, authToken)
-        if(messagesContainer.value) {
-            messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
-        }
     }
 }
 
@@ -69,6 +66,24 @@ const handleSuggestions = (event: MouseEvent) => {
     const target = event.target as HTMLHeadingElement
     sendMessage(target.innerText)
 }
+
+watch(
+    () => sessionApiStore.currentSession?.messages,
+    () => {
+        nextTick(() => {
+            if(messagesContainer.value) {
+                // Find the last message element
+                let lastMessage = messagesContainer.value.querySelector('.chat-messages > .message:last-child');
+                console.log(lastMessage)
+                if(lastMessage) {
+                    // Scroll to the last message smoothly
+                    lastMessage.scrollIntoView({behavior: 'smooth'});
+                }
+            }
+        });
+    },
+    {deep: true}
+);
 </script>
 
 <template>

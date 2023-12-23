@@ -9,6 +9,7 @@ import {useAuthStore} from '../stores/authStore'
 var authStore = useAuthStore()
 var sessionApiStore = useChatSessionApiStore()
 
+
 onMounted(async () => {
     let authToken = authStore.currentAccessToken
     await sessionApiStore.loadAllSession(authToken)
@@ -16,6 +17,7 @@ onMounted(async () => {
     console.log("this is the result:")
     console.log(session)
 })
+
 </script>
 
 <template>
@@ -57,7 +59,7 @@ onMounted(async () => {
     height: 100vh;
     color: white;
     display: flex;
-    overflow: hidden;
+    position: fixed;
 }
 
 
